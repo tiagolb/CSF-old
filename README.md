@@ -1,2 +1,0 @@
-# CSF
-Awesome CSF project
