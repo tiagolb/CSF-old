@@ -1,33 +1,25 @@
-# -*- coding: utf-8 -*-
-
 import sys
 import re
 
 
 def twitter(input_file):
+    strings_joined = '\n'.join(input_file.readlines())
 
-    # .+href=\\"\\/(\w+).+data-user-id=\\"(\d+).+src=\\(.+\.jpeg).+\\".+data-aria-label-part=\\"0\\">(.+)<\\/p>
-    # DirectMessage--(sent|received).+data-message-id=\\"(\d+).+href=\\"\\/(\w+).+data-user-id=\\"(\d+).+src=\\"(.+\.jpg)data-aria-label-part=\\0\\">([^<]+)<
+    processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
+    # talk_id = r'(conversation":{"id":"\d+-\d+)?"'
+    message_type = r'<div.*?DirectMessage--(sent|received).*?data-message-id="(\d+)'
+    handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
+    avatar = r'DMAvatar-image"\s*src="([^"]+?)".'
+    content = r'class="TweetTextSize[^>]+?>([^<]+?)<'
+    date = r'data-time="(\d+)"'
 
-    # p = re.compile(r"""<div.*?DirectMessage--(sent|received).*?data-message-id="(\d+)""", re.VERBOSE | re.DOTALL)
+    talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
 
-    message_type = r"""<div.*?DirectMessage--(sent|received).*?data-message-id="(\d+)"""
+    talk = talk_regex.findall(processed_input)
 
-    handler = r"""a\s*href="([^"]+?)".*?data-user-id="(\d+)"""
-
-    avatar = r"""DMAvatar-image"\s*src="([^"]+?)"."""
-
-    content = r"""class="TweetTextSize[^>]+?>([^<]+?)<"""
-
-    p = re.compile(".*?".join([message_type, handler, avatar, content]), re.VERBOSE | re.DOTALL)
-
-    str = '\n'.join(input_file.readlines())
-
-    m = set(p.findall(str))
-    if m:
-        print m
-
+    return set(talk)
 
 if __name__ == '__main__':
-    twitter(open(sys.argv[1], "r"))
+    for entry in twitter(open(sys.argv[1], "r")):
+        print entry
