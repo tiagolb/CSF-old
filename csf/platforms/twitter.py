@@ -2,7 +2,7 @@ import sys
 import re
 
 
-def twitter(input_file):
+def get_twitter_set(input_file):
     strings_joined = '\n'.join(input_file.readlines())
 
     processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
@@ -17,9 +17,12 @@ def twitter(input_file):
     talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
 
     talk = talk_regex.findall(processed_input)
-
     return set(talk)
 
+
+def get_twitter_timeline(twitter_set):
+    return "OLA MUNDO"
+
 if __name__ == '__main__':
-    for entry in twitter(open(sys.argv[1], "r")):
+    for entry in get_twitter_set(open(sys.argv[1], "r")):
         print entry
