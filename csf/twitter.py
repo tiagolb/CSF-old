@@ -4,7 +4,7 @@ import sys
 import re
 
 
-def main(input_file):
+def twitter(input_file):
 
     # .+href=\\"\\/(\w+).+data-user-id=\\"(\d+).+src=\\(.+\.jpeg).+\\".+data-aria-label-part=\\"0\\">(.+)<\\/p>
     # DirectMessage--(sent|received).+data-message-id=\\"(\d+).+href=\\"\\/(\w+).+data-user-id=\\"(\d+).+src=\\"(.+\.jpg)data-aria-label-part=\\0\\">([^<]+)<
@@ -30,4 +30,4 @@ def main(input_file):
 
 
 if __name__ == '__main__':
-    main(open(sys.argv[1], "r"))
+    twitter(open(sys.argv[1], "r"))
