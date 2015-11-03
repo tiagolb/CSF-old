@@ -5,4 +5,5 @@ try:
 except:
     __version__ = 'unknown'
 
-from cli_parser import get_cli_options
+import header
+import footer

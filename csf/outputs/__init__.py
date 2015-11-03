@@ -6,6 +6,5 @@ except:
     __version__ = 'unknown'
 
 from output import PLATFORM
-from output import htmlOutput
-from output import textOutput
+from output import create_output_manager
 

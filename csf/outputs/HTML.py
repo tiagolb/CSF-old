@@ -242,7 +242,8 @@ class Table (object):
     def __init__(self, rows=None, border='1', style=None, width=None,
                 cellspacing=None, cellpadding=4, attribs=None, header_row=None,
                 col_width=None, col_align=None, col_valign=None,
-                col_char=None, col_charoff=None, col_styles=None):
+                col_char=None, col_charoff=None, col_styles=None,
+                classes=None):
         """TableCell constructor"""
         self.border = border
         self.style = style
@@ -262,6 +263,7 @@ class Table (object):
         self.col_charoff = col_charoff
         self.col_valign  = col_valign
         self.col_styles  = col_styles
+        self.classes = classes
 
     def __str__(self):
         """return the HTML code for the table as a string"""
@@ -269,6 +271,7 @@ class Table (object):
         if self.border: self.attribs['border'] = self.border
         if self.style:  self.attribs['style'] = self.style
         if self.width:  self.attribs['width'] = self.width
+        if self.classes: self.attribs['class'] = self.classes
         if self.cellspacing:  self.attribs['cellspacing'] = self.cellspacing
         if self.cellpadding:  self.attribs['cellpadding'] = self.cellpadding
         for attr in self.attribs:

@@ -12,22 +12,15 @@ def main():
     args     = get_cli_options()
     filename = args.file[0]
     targets  = args.target
+    verbose  = args.verbose
+    html     = args.html
 
     file_handler = open(filename, "r")
-    if args.html:
-        output = outputs.htmlOutput()
-    else:
-        output = outputs.textOutput()
+    output = outputs.create_output_manager(html, verbose)
 
-    # ** cli_parser.CHOICES **
-    # * CHOICES[0] = 'twitter'
-    # * CHOICES[1] = 'facebook'
-    # * CHOICES[2] = 'gmail'
-    # * CHOICES[3] = 'pidgin'
-
-    if CHOICES[0] in targets:
-        twitter_set      = get_twitter_set(file_handler)
-        twitter_timeline = get_twitter_timeline(twitter_set)
+    if "twitter" in targets:
+        twitter = TwitterParser()
+        twitter_timeline = twitter.get_timeline(file_handler)
         output.append(twitter_timeline, outputs.PLATFORM["twitter"])
 
 
