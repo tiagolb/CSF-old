@@ -6,3 +6,4 @@ except:
     __version__ = 'unknown'
 
 from twitter import *
+from facebook import *
