@@ -16,7 +16,7 @@ def main():
     html     = args.html
 
     file_handler = open(filename, "r")
-    output = outputs.create_output_manager(html, verbose)
+    output = outputs.create_output_manager(html, verbose, targets)
 
     if "twitter" in targets:
         twitter = TwitterParser()
