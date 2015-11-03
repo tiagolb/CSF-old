@@ -14,14 +14,18 @@ def get_twitter_set(input_file):
     content = r'class="TweetTextSize[^>]+?>([^<]+?)<'
     date = r'data-time="(\d+)"'
 
-    talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
+    talk_regex = re.compile(
+        '.*?'.join([message_type, handler, avatar, content, date]),
+        re.VERBOSE | re.DOTALL)
 
     talk = talk_regex.findall(processed_input)
     return set(talk)
 
 
 def get_twitter_timeline(twitter_set):
-    return "OLA MUNDO"
+    twitter_list = list(twitter_set)
+    return sorted(twitter_list, key=lambda t_list: t_list[6])
+
 
 if __name__ == '__main__':
     for entry in get_twitter_set(open(sys.argv[1], "r")):
