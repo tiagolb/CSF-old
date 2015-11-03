@@ -2,7 +2,7 @@ import sys
 import re
 
 class FacebookParser:
-    def get_facebook_list(self, input_file):
+    def get_facebook_set(self, input_file):
         strings_joined = '\n'.join(input_file.readlines())
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
@@ -14,7 +14,7 @@ class FacebookParser:
             '.*?'.join([begin]),
             re.VERBOSE | re.DOTALL)
 
-        messageTuples = set(message_block_regex.findall(processed_input))
+        messageTuples = message_block_regex.findall(processed_input)
 
         # Regex for intel extraction from each tuple
         handler = r'\[author\]=fbid%3A(\d+)'
@@ -30,28 +30,27 @@ class FacebookParser:
         group_talk_regex = re.compile(
         '.*?'.join([handler, date, content, group_recipient]),
         re.VERBOSE | re.DOTALL)
-        
+
         results = []
 
         for t in messageTuples:
             singleTalk = single_talk_regex.findall(t)
             if(len(singleTalk)>0):
-                results.append(singleTalk)
+                results.append(singleTalk[0])
                 continue
             else:
                 groupTalk = group_talk_regex.findall(t)
                 if(len(groupTalk)>0):
-                    results.append(groupTalk)
+                    results.append(groupTalk[0])
 
-
-        return results
+        return set(results)
 
     def get_facebook_timeline(self, facebook_list):
         return sorted(facebook_list, key=lambda t_list: t_list[1])
 
 
     def get_timeline(self, input_file):
-        facebook_list      = self.get_facebook_list(input_file)
+        facebook_list     = self.get_facebook_set(input_file)
         facebook_timeline = self.get_facebook_timeline(facebook_list)
         return facebook_timeline
 
