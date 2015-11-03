@@ -5,6 +5,7 @@ from html_assets import *
 
 PLATFORM = {
     "twitter" : 0,
+    "facebook" : 1,
 }
 
 AUDIT_DIR = "audit_result"
@@ -59,6 +60,8 @@ class HtmlOutput(OutputFactory):
     def append(self, input_list, platform):
         if platform == PLATFORM["twitter"]:
             self.__twitter_output(input_list)
+        if platform == PLATFORM["facebook"]:
+            self.__facebook_output(input_list)
 
     def __twitter_output(self, input_list):
         t = HTML.Table(
@@ -88,6 +91,9 @@ class HtmlOutput(OutputFactory):
         if self.verbose:
             print htmlcode
 
+    def __facebook_output(self, input_list):
+        print "Hello World!"
+
 
 
 class TextOutput(OutputFactory):
@@ -103,6 +109,8 @@ class TextOutput(OutputFactory):
     def append(self, input_list, platform):
         if platform == PLATFORM["twitter"]:
             self.__twitter_output(input_list)
+        if platform == PLATFORM["facebook"]:
+            self.__facebook_output(input_list)
 
     def __twitter_output(self, input_list):
         file_handler = open(AUDIT_TEXT, "w")
@@ -113,6 +121,9 @@ class TextOutput(OutputFactory):
                 print "[+]", message
 
         file_handler.close()
+
+    def __facebook_output(self, input_list):
+        print "Hello World!"
 
 def __create_directories():
     if not os.path.exists(AUDIT_DIR):

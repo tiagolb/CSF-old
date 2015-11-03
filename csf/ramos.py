@@ -23,6 +23,11 @@ def main():
         twitter_timeline = twitter.get_timeline(file_handler)
         output.append(twitter_timeline, outputs.PLATFORM["twitter"])
 
+    if "facebook" in targets:
+        facebook = FacebookParser()
+        facebook_timeline = facebook.get_timeline(file_handler)
+        output.append(facebook_timeline, outputs.PLATFORM["facebook"])
+
 
 if __name__ == "__main__":
     main()
