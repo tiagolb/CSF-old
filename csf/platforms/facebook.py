@@ -19,7 +19,7 @@ class FacebookParser:
         # Regex for intel extraction from each tuple
         handler = r'\[author\]=fbid%3A(\d+)'
         date = r'\[timestamp\]=(\d+)'
-        content = r'\[body\]=(\w+)&message_batch'
+        content = r'\[body\]=(.+?)&message_batch'
         single_recipient = r'\[other_user_fbid\]=(\d+)'
         group_recipient = r'\[thread_fbid\]=(\d+)'
 

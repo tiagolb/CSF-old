@@ -41,7 +41,7 @@ class FacebookThreadsParser:
         return set(results)
 
     def get_facebook_threads_timeline(self, facebook_threads_list):
-        return sorted(facebook_threads_list, key=lambda t_list: t_list[1])
+        return sorted(facebook_threads_list, key=lambda t_list: t_list[6])
 
 
     def get_timeline(self, input_file):
