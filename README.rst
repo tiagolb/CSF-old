@@ -11,7 +11,7 @@ Google Chrome:
 Clears data after navigating away to other webpage. (Process which serves the website changes) RAM content is cleared.
 Messages can still be extracted when user simply logged out of the account (Facebook & Twitter) and may or may not closed the browser. Data recovery works even for Private Navigation.
 
-Firefox:
+Firefox/Tor:
 Facebook data is scrambled (just after logout & after browsing).
 Twitter data can be accessed when user logs out, even if browser is closed after (data is scrambled after navigation).
 
