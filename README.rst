@@ -8,11 +8,16 @@ Add a short description here!
 Notes
 ====
 Google Chrome:
-Clears data after navigating away to other webpage. (Process which serves the website changes) RAM content is cleared after closing the browser. Messages can still be extracted when user simply logged out of the account (Facebook & Twitter).
+Clears data after navigating away to other webpage. (Process which serves the website changes) RAM content is cleared.
+Messages can still be extracted when user simply logged out of the account (Facebook & Twitter) and may or may not closed the browser. Data recovery works even for Private Navigation.
 
 Firefox:
 Facebook data is scrambled (just after logout & after browsing).
-Twitter data can be accessed when user logs out (data is too scrambled after).
+Twitter data can be accessed when user logs out, even if browser is closed after (data is scrambled after navigation).
+
+Internet Explorer 11:
+Mobile Twitter Version = 0 extraction
+No Facebook data
 
 Pidgin:
 Dumping Pidgin memory/DumpIt while Pidgin is opened works for retrieving messages even if logs are disabled and OTR is used. This probably happens because of some GUI buffer. We may be able to recover only partial messages.
