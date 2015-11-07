@@ -13,7 +13,7 @@ class FacebookThreadsParser:
         message_block_regex = re.compile(
             '.*?'.join([begin]),
             re.VERBOSE | re.DOTALL)
-        
+
         messageTuples = message_block_regex.findall(processed_input)
         """
         for i in messageTuples:
@@ -33,14 +33,14 @@ class FacebookThreadsParser:
             re.VERBOSE | re.DOTALL)
 
         results = []
-        
+
         for t in messageTuples:
             Threads = thread_regex.findall(t)
             results.append(Threads[0])
 
         return set(results)
-        
-    def get_facebook_threads_timeline(self, facebook_list):
+
+    def get_facebook_threads_timeline(self, facebook_threads_list):
         return sorted(facebook_threads_list, key=lambda t_list: t_list[1])
 
 

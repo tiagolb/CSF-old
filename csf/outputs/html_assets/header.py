@@ -42,12 +42,7 @@ header_targets = """
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
-      <h1>
     """
-
-header_end = """
-      </h1>
-  """
 
 def header_html(title, targets):
   target_list = ""
@@ -55,6 +50,5 @@ def header_html(title, targets):
     target_list += '<li><a href="' + target + '.html">' + target + '</a></li>'
   header = header_top + title + \
            header_bottom + target_list +\
-           header_targets + title +\
-           header_end
+           header_targets
   return header

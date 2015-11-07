@@ -28,7 +28,18 @@ def main():
     if "facebook" in targets:
         facebook = FacebookParser()
         facebook_timeline = facebook.get_timeline(file_handler)
-        output.append(facebook_timeline, outputs.PLATFORM["facebook"])
+
+        file_handler.seek(0)
+        facebook_threads = FacebookThreadsParser()
+        facebook_threads_timeline = facebook_threads.get_timeline(file_handler)
+
+        #print facebook_timeline
+        #print "###############################################################"
+        #print facebook_threads_timeline
+
+
+        output.append([facebook_timeline, facebook_threads_timeline],
+            outputs.PLATFORM["facebook"])
 
     file_handler.close()
 
