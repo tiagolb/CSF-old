@@ -1,7 +1,6 @@
 import HTML
 import datetime
 import os
-import re
 from html_assets import *
 import urllib
 
@@ -67,15 +66,15 @@ class HtmlOutput(OutputFactory):
     def __init__(self, verbose, targets):
         super(self.__class__, self).__init__(verbose, targets)
 
-        header_code = self.__build_html_header("RAMOS", self.targets)
+        header_code = self.__build_html_header("RAMAS", self.targets)
         footer_code = self.__build_html_footer()
         html_code = """
             <div class="row">
               <div class="col-md-2"></div>
               <div class="col-md-8">
-                <h1>RAMOS</h1>
-                <h3 class="text-justify">This is RAMOS, a data-carving utility designed to extract data from conversations that took place while using applications such as Facebook, Twitter and more.</h3>
-                <h3 class="text-justify">RAMOS was implemented for the Ciber Forensic Security course at Instituto Superior Tecnico and is available at this <a href="https://github.com/tiagolb/CSF">GitHub repository</a>.</h3>
+                <h1>RAMAS</h1>
+                <h3 class="text-justify">This is RAMAS, a data-carving utility designed to extract data from conversations that took place while using applications such as Facebook, Twitter and more.</h3>
+                <h3 class="text-justify">RAMAS was implemented for the Ciber Forensic Security course at Instituto Superior Tecnico and is available at this <a href="https://github.com/tiagolb/CSF">GitHub repository</a>.</h3>
 
                 <h4 class="text-center">
                     <br/>

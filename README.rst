@@ -1,12 +1,11 @@
-===
-CSF
-===
+RAMAS
+=====
 
-Add a short description here!
+RAM Analysis System
 
 
 Notes
-====
+=====
 Google Chrome:
 Clears data after navigating away to other webpage. (Process which serves the website changes) RAM content is cleared.
 Messages can still be extracted when user simply logged out of the account (Facebook & Twitter) and may or may not closed the browser. Data recovery works even for Private Navigation.
