@@ -18,6 +18,8 @@ def time_convert(time_long):
         int(time_long)
     ).strftime('%Y-%m-%d %H:%M:%S')
 
+def utf8(string):
+    return string.encode("utf8")
 
 class OutputFactory(object):
 
