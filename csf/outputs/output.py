@@ -147,7 +147,8 @@ class HtmlOutput(OutputFactory):
                     'receiver (group)',
                     'message',
                     'participants',
-                    'former_participants'
+                    'former_participants',
+                    'count'
                 ],
                 classes="table table-striped"
             )
@@ -157,6 +158,7 @@ class HtmlOutput(OutputFactory):
                 message[4]+'">' + message[4] +'</a>'
             dest_id = '<a href="https://facebook.com/'+\
                 message[0]+'">' + message[0] +'</a>'
+            count = message[5]
 
             part = []
             for p in message[1].split(","):
@@ -183,7 +185,8 @@ class HtmlOutput(OutputFactory):
                 dest_id,
                 message[3],
                 participants,
-                former_participants])
+                former_participants,
+                count])
         return str(t)
 
 
