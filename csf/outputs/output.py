@@ -3,6 +3,7 @@ import datetime
 import os
 import re
 from html_assets import *
+import urllib
 
 PLATFORM = {
     "twitter" : 0,
@@ -18,8 +19,18 @@ def time_convert(time_long):
         int(time_long)
     ).strftime('%Y-%m-%d %H:%M:%S')
 
-def utf8(string):
-    return string.encode("utf8")
+def urldecode(string):
+    return urllib.unquote(string)
+
+# def utf8(string):
+#     if isinstance(string, str):
+#         print "ordinary string"
+#     elif isinstance(string, unicode):
+#         print "unicode string"
+#     else:
+#         print "not a string"
+#     print string.decode('unicode-escape')
+#     return string
 
 class OutputFactory(object):
 
@@ -88,10 +99,10 @@ class HtmlOutput(OutputFactory):
     def twitter_output(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'avatar',
-                    'author',
-                    'message',
+                    'Timestamp',
+                    'Avatar',
+                    'Author',
+                    'Message',
                 ],
                 classes="table table-striped"
             )
@@ -123,10 +134,10 @@ class HtmlOutput(OutputFactory):
     def __facebook_table(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'author',
-                    'receiver',
-                    'message',
+                    'Timestamp',
+                    'Author',
+                    'Receiver',
+                    'Message',
                 ],
                 classes="table table-striped"
             )
@@ -137,20 +148,20 @@ class HtmlOutput(OutputFactory):
             dest_id = '<a href="https://facebook.com/'+\
                 message[3]+'">' + message[3] +'</a>'
             t.rows.append(
-                [datetime, author_id, dest_id, message[2]])
+                [datetime, author_id, dest_id, urldecode(message[2])])
         return str(t)
 
 
     def __facebook_threads_table(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'author',
-                    'receiver (group)',
-                    'message',
-                    'participants',
-                    'former_participants',
-                    'count'
+                    'Timestamp',
+                    'Author',
+                    'Receiver (group)',
+                    'Message',
+                    'Participants',
+                    'Former Participants',
+                    'Count'
                 ],
                 classes="table table-striped"
             )
@@ -233,7 +244,7 @@ class TextOutput(OutputFactory):
         return datetime +\
             " by "+ author_id + \
             " to "+ dest_id +\
-            " : " + message[2]
+            " : " + urldecode(message[2])
 
     def __format_facebook_threads_message(self, message):
         datetime = time_convert(message[6][:-3])
