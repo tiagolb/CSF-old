@@ -12,6 +12,7 @@ __pycache__/*
 .*.swp
 .DS_Store
 
+
 # Project files
 .ropeproject
 .project
@@ -40,3 +41,4 @@ docs/api/*
 docs/_build/*
 cover/*
 MANIFEST
+csf/audit_result/*
