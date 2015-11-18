@@ -7,16 +7,14 @@ class FacebookThreadsParser:
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        #Input split into message blocks tuples
+        # Input split into message blocks tuples
         begin = r'{\"thread_id\":(.+?)titan_originated_thread_id'
 
-        message_block_regex = re.compile(
-            '.*?'.join([begin]),
-            re.VERBOSE | re.DOTALL)
+        message_block_regex = re.compile(begin, re.VERBOSE | re.DOTALL)
 
-        messageTuples = message_block_regex.findall(processed_input)
+        message_tuples = message_block_regex.findall(processed_input)
         """
-        for i in messageTuples:
+        for i in message_tuples:
             print i+"\n"
         """
         # Regex for intel extraction from each tuple
@@ -34,15 +32,14 @@ class FacebookThreadsParser:
 
         results = []
 
-        for t in messageTuples:
-            Threads = thread_regex.findall(t)
-            results.append(Threads[0])
+        for t in message_tuples:
+            threads = thread_regex.findall(t)
+            results.append(threads[0])
 
         return set(results)
 
     def get_facebook_threads_timeline(self, facebook_threads_list):
         return sorted(facebook_threads_list, key=lambda t_list: t_list[6])
-
 
     def get_timeline(self, input_file):
         facebook_threads_list     = self.get_facebook_threads_set(input_file)

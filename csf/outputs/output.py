@@ -1,8 +1,8 @@
 import HTML
 import datetime
 import os
-import re
 from html_assets import *
+import urllib
 
 PLATFORM = {
     "twitter" : 0,
@@ -18,6 +18,18 @@ def time_convert(time_long):
         int(time_long)
     ).strftime('%Y-%m-%d %H:%M:%S')
 
+def urldecode(string):
+    return urllib.unquote(string)
+
+# def utf8(string):
+#     if isinstance(string, str):
+#         print "ordinary string"
+#     elif isinstance(string, unicode):
+#         print "unicode string"
+#     else:
+#         print "not a string"
+#     print string.decode('unicode-escape')
+#     return string
 
 class OutputFactory(object):
 
@@ -54,15 +66,15 @@ class HtmlOutput(OutputFactory):
     def __init__(self, verbose, targets):
         super(self.__class__, self).__init__(verbose, targets)
 
-        header_code = self.__build_html_header("RAMOS", self.targets)
+        header_code = self.__build_html_header("RAMAS", self.targets)
         footer_code = self.__build_html_footer()
         html_code = """
             <div class="row">
               <div class="col-md-2"></div>
               <div class="col-md-8">
-                <h1>RAMOS</h1>
-                <h3 class="text-justify">This is RAMOS, a data-carving utility designed to extract data from conversations that took place while using applications such as Facebook, Twitter and more.</h3>
-                <h3 class="text-justify">RAMOS was implemented for the Ciber Forensic Security course at Instituto Superior Tecnico and is available at this <a href="https://github.com/tiagolb/CSF">GitHub repository</a>.</h3>
+                <h1>RAMAS</h1>
+                <h3 class="text-justify">This is RAMAS, a data-carving utility designed to extract data from conversations that took place while using applications such as Facebook, Twitter and more.</h3>
+                <h3 class="text-justify">RAMAS was implemented for the Ciber Forensic Security course at Instituto Superior Tecnico and is available at this <a href="https://github.com/tiagolb/CSF">GitHub repository</a>.</h3>
 
                 <h4 class="text-center">
                     <br/>
@@ -86,10 +98,10 @@ class HtmlOutput(OutputFactory):
     def twitter_output(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'avatar',
-                    'author',
-                    'message',
+                    'Timestamp',
+                    'Avatar',
+                    'Author',
+                    'Message',
                 ],
                 classes="table table-striped"
             )
@@ -121,10 +133,10 @@ class HtmlOutput(OutputFactory):
     def __facebook_table(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'author',
-                    'receiver',
-                    'message',
+                    'Timestamp',
+                    'Author',
+                    'Receiver',
+                    'Message',
                 ],
                 classes="table table-striped"
             )
@@ -135,20 +147,20 @@ class HtmlOutput(OutputFactory):
             dest_id = '<a href="https://facebook.com/'+\
                 message[3]+'">' + message[3] +'</a>'
             t.rows.append(
-                [datetime, author_id, dest_id, message[2]])
+                [datetime, author_id, dest_id, urldecode(message[2])])
         return str(t)
 
 
     def __facebook_threads_table(self, input_list):
         t = HTML.Table(
                 header_row=[
-                    'timestamp',
-                    'author',
-                    'receiver (group)',
-                    'message',
-                    'participants',
-                    'former_participants',
-                    'count'
+                    'Timestamp',
+                    'Author',
+                    'Receiver (group)',
+                    'Message',
+                    'Participants',
+                    'Former Participants',
+                    'Count'
                 ],
                 classes="table table-striped"
             )
@@ -231,7 +243,7 @@ class TextOutput(OutputFactory):
         return datetime +\
             " by "+ author_id + \
             " to "+ dest_id +\
-            " : " + message[2]
+            " : " + urldecode(message[2])
 
     def __format_facebook_threads_message(self, message):
         datetime = time_convert(message[6][:-3])
