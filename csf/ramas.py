@@ -3,6 +3,14 @@ from platforms import *
 from interfaces import *
 import outputs
 
+def module_exists(module_name):
+    try:
+        __import__(module_name)
+    except ImportError:
+        return False
+    else:
+        return True
+
 def main():
 
     # ** cli_parser.ARGS **
@@ -17,6 +25,21 @@ def main():
 
     file_handler = open(filename, "r")
     output = outputs.create_output_manager(html, verbose, targets)
+
+    print 'hello'
+    if module_exists("external"):
+        print 'hello'
+        import external
+        modules  = external.MODULES
+        print modules
+
+        for key, value in modules.iteritems():
+            modparser = value[0]
+            modparser_timeline = modparser.get_timeline(file_handler)
+            modoutput = value[1]
+            print 'hello'
+            modoutput.append(modparser_timeline)
+            file_handler.seek(0)
 
     if "twitter" in targets:
         twitter = TwitterParser()

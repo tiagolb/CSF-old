@@ -41,4 +41,5 @@ docs/api/*
 docs/_build/*
 cover/*
 MANIFEST
-audit_result
+csf/audit_result/*
+csf/external/*
