@@ -28,7 +28,8 @@ After Pidgin is closed we can not recover anything.
 
 An Observation (NOT REGEX EXTRACTED, JUST CUTE): we are able to see messages traded with server, other artifacts and HTML logs(if any). Pidgin seems to load logged info on startup.
 
-
+Telegram:
+Cannot recover any structure of Telegram, let it be on Chrome/Firefox/DesktopApp
 
 This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see http://pyscaffold.readthedocs.org/.
