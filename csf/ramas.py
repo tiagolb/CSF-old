@@ -13,29 +13,34 @@ def module_exists(module_name):
 
 def main():
 
+    modules_are_installed = False
+    installed_modules = {}
+    if module_exists("external"):
+        import external
+        installed_modules  = external.MODULES
+        modules_are_installed = True
+
     # ** cli_parser.ARGS **
     # * file[]
     # * html bool
     # * target[]
-    args     = get_cli_options()
+    args     = get_cli_options(installed_modules)
     filename = args.file[0]
-    targets  = args.target
+    targets  = args.targets
     verbose  = args.verbose
     html     = args.html
+    modules  = args.modules
+    #print modules
 
     file_handler = open(filename, "r")
     output = outputs.create_output_manager(html, verbose, targets)
 
-    if module_exists("external"):
-        import external
-        modules  = external.MODULES
-        print modules
-
+    if modules_are_installed:
         for key, value in modules.iteritems():
             modparser = value[0]
             modparser_timeline = modparser.get_timeline(file_handler)
             modoutput = value[1]
-            print 'hello'
+            #print 'hello'
             modoutput.append(modparser_timeline)
             file_handler.seek(0)
 
