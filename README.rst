@@ -10,8 +10,9 @@ Google Chrome:
 Clears data after navigating away to other webpage. (Process which serves the website changes) RAM content is cleared.
 Messages can still be extracted when user simply logged out of the account (Facebook & Twitter) and may or may not closed the browser. Data recovery works even for Private Navigation.
 
-Messenger: Recovered sent msg after logOut-CloseBrowser-DumpIt
-          - Business as usual with dump after LogOut
+Messenger: 
+Recovered sent msg after logOut-CloseBrowser-DumpIt
+Business as usual with dump after LogOut
 
 Firefox/Tor:
 Facebook data is scrambled (just after logout & after browsing).
@@ -33,6 +34,10 @@ Cannot recover any structure of Telegram, let it be on Chrome/Firefox/DesktopApp
 
 WhatsApp:
 Cannot recover any structure of WhatsApp, Chrome/Firefox
+
+Roundcube:
+We are able to recover email headers in a structured way - Chrome
+
 
 This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see http://pyscaffold.readthedocs.org/.
