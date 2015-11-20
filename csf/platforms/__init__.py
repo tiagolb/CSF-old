@@ -7,7 +7,7 @@ except:
 
 import twitter
 import facebook
-from facebookThreads import *
+import facebookThreads
 
 TARGETS = {
     'twitter' : [
