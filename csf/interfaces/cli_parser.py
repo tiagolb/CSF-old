@@ -28,11 +28,17 @@ def do_extract(args, targets):
             print "\t[+] %s" % target
 
     return_targets = {}
+    pre_processing = "egrep -w '"
     for key, value in targets.iteritems():
         if key in args.targets:
             return_targets[key] = value
+        if value[2]:
+            pre_processing += value[2] + "|"
 
-    args.targets = return_targets
+    args.preprocessing = pre_processing[:-1] + "' " + args.file[0]
+
+    args.targets       = return_targets
+
 
     return args
 

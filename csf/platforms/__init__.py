@@ -16,14 +16,17 @@ TARGETS = {
     'twitter' : [
             twitter.TwitterParser(),
             twitter.Output(),
+            "DirectMessage",
         ],
     'facebook' : [
             facebook.FacebookParser(),
             facebook.Output(),
+            "fbid",
         ],
     'facebook_threads' : [
             facebookThreads.FacebookThreadsParser(),
             facebookThreads.Output(),
+            None,
         ],
     'roundcube' : [
             roundcube.RoundcubeParser(),
