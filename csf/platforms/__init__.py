@@ -5,6 +5,21 @@ try:
 except:
     __version__ = 'unknown'
 
-from twitter import *
-from facebook import *
+import twitter
+import facebook
 from facebookThreads import *
+
+TARGETS = {
+    'twitter' : [
+            twitter.TwitterParser(),
+            twitter.Output(),
+        ],
+    'facebook' : [
+            facebook.FacebookParser(),
+            facebook.Output(),
+        ],
+    'facebook_threads' : [
+            facebookThreads.FacebookThreadsParser(),
+            facebookThreads.Output(),
+        ],
+    }

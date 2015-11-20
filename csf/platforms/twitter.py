@@ -1,6 +1,6 @@
 import sys
 import re
-
+import outputs
 
 class TwitterEntry:
     def __init__(self, direction, msg_id, username, user_id, avatar, content, timestamp):
@@ -52,6 +52,47 @@ class TwitterParser:
         twitter_timeline = self.get_twitter_timeline(twitter_set)
         return twitter_timeline
 
+class Output(outputs.OutputFactory):
+
+    def __format_twitter_message(self, message):
+        messenger_id = message[2]+"("+message[3]+")"
+        datetime = outputs.time_convert(message[6])
+        formated_message = datetime +\
+            " by " + messenger_id +\
+            ":"   + message[5]
+        return formated_message
+
+    def text_code(self, input_list):
+        if self.verbose:
+                print "[*] TWITTER"
+        text = ""
+        for twitter_tuple in input_list:
+            message = self.__format_twitter_message(twitter_tuple)
+            text += message + "\n"
+            if self.verbose:
+                print "[+]", message
+        return text
+
+    def html_code(self, input_list):
+        t = outputs.HTML.Table(
+                header_row=[
+                    'Timestamp',
+                    'Avatar',
+                    'Author',
+                    'Message',
+                ],
+                classes="table table-striped"
+            )
+        for message in input_list:
+            messenger_id = '<a href="https://twitter.com/'+\
+                message[2]+'">' + message[2] +\
+                '</a> ('+message[3]+')'
+            avatar = '<img src="' + message[4] + '" height="40" width="40" />'
+            datetime = outputs.time_convert(message[6])
+            t.rows.append(
+                [datetime, avatar, messenger_id, message[5]])
+        html_code = str(t)
+        return html_code
 
 if __name__ == '__main__':
     twitter = TwitterParser()

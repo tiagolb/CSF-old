@@ -1,6 +1,7 @@
 import sys
 import re
 
+import outputs
 
 class FacebookParser:
     def get_facebook_set(self, input_file):
@@ -51,6 +52,49 @@ class FacebookParser:
         facebook_list     = self.get_facebook_set(input_file)
         facebook_timeline = self.get_facebook_timeline(facebook_list)
         return facebook_timeline
+
+class Output(outputs.OutputFactory):
+
+    def __format_facebook_message(self, message):
+        datetime = outputs.time_convert(message[1][:-3])
+        author_id = message[0]
+        dest_id = message[3]
+        return datetime +\
+            " by "+ author_id + \
+            " to "+ dest_id +\
+            " : " + outputs.urldecode(message[2])
+
+    def text_code(self, input_list):
+        if self.verbose:
+                print "[*] FACEBOOK"
+        text = ""
+        for facebook_tuple in input_list:
+            message = self.__format_facebook_message(facebook_tuple)
+            text += message + "\n"
+            if self.verbose:
+                print "[+]", message
+        return text
+
+    def html_code(self, input_list):
+        t = outputs.HTML.Table(
+                header_row=[
+                    'Timestamp',
+                    'Author',
+                    'Receiver',
+                    'Message',
+                ],
+                classes="table table-striped"
+            )
+        for message in input_list:
+            datetime = outputs.time_convert(message[1][:-3])
+            author_id = '<a href="https://facebook.com/'+\
+                message[0]+'">' + message[0] +'</a>'
+            dest_id = '<a href="https://facebook.com/'+\
+                message[3]+'">' + message[3] +'</a>'
+            t.rows.append(
+                [datetime, author_id, dest_id, outputs.urldecode(message[2])])
+        return str(t)
+
 
 
 if __name__ == '__main__':

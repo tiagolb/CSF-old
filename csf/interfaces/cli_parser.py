@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import argparse
-
-TARGETS = ['twitter', 'facebook', 'gmail', 'pidgin']
+import sys
+import os
+import wget
 
 def make_list(choices):
     CHOICES = choices
@@ -19,30 +20,41 @@ def make_list(choices):
                 setattr(namespace, self.dest, values)
     return DefaultListAction
 
-def do_extract(args, modules):
+def do_extract(args, targets):
     if args.verbose:
         print "[*] Filename: %s" % args.file[0]
         print "[*] Targets selected:"
         for target in args.targets:
             print "\t[+] %s" % target
-        print "[*] Modules selected:"
-        for module in args.modules:
-            print "\t[+] %s" % module
 
-    return_modules = {}
-    for key, value in modules.iteritems():
-        if key in args.modules:
-            return_modules[key] = value
+    return_targets = {}
+    for key, value in targets.iteritems():
+        if key in args.targets:
+            return_targets[key] = value
 
-    args.modules = return_modules
+    args.targets = return_targets
 
     return args
 
-def do_create(args, modules):
-    print "WGET"
+def do_create(args, targets):
+    EXTERNAL = 'external'
+    if not os.path.exists(EXTERNAL):
+        os.makedirs(EXTERNAL)
 
-def get_cli_options(modules):
-    modulesList = modules.keys()
+    savedPath = os.getcwd()
+    os.chdir(EXTERNAL)
+
+    url_init   = 'http://web.ist.utl.pt/ist172647/ramas/external/__init__.py'
+    url_module = 'http://web.ist.utl.pt/ist172647/ramas/external/newModule.py'
+    wget.download(url_init)
+    wget.download(url_module)
+    os.chdir(savedPath)
+    print '\n'
+
+    sys.exit(0)
+
+def get_cli_options(targets):
+    targetsList = targets.keys()
     #Argument Parsing & Program Info
     parser = argparse.ArgumentParser(
         prog = 'ramas',
@@ -53,11 +65,11 @@ def get_cli_options(modules):
     parser_a = subparsers.add_parser('extract', help='Extraction command')
     parser_a.add_argument('-f', '--file', nargs=1, required=True, help='Raw memory dump file.')
     parser_a.add_argument('--html', action='store_true', help='HTML output flag.')
-    parser_a.add_argument('-t', '--targets', nargs='+',
-        action=make_list(TARGETS), default=TARGETS, help='Installed targets: '+str(TARGETS))
+    parser_a.add_argument('-t', '--targets', nargs='+', action=make_list(targetsList),
+        default=targetsList, help='Installed targets: '+str(targetsList))
     parser_a.add_argument('-v', '--verbose', action='store_true', help='verbose')
-    parser_a.add_argument('-m', '--modules', nargs='+', action=make_list(modulesList),
-        default=modulesList, help='Installed modules: '+str(modulesList))
+    #parser_a.add_argument('-m', '--modules', nargs='+', action=make_list(modulesList),
+    #    default=modulesList, help='Installed modules: '+str(modulesList))
     parser_a.set_defaults(func=do_extract)
 
     #create_mode = False
@@ -65,4 +77,4 @@ def get_cli_options(modules):
     parser_b.set_defaults(func=do_create)
 
     args = parser.parse_args()
-    return args.func(args, modules)
+    return args.func(args, targets)

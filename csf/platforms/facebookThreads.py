@@ -1,6 +1,8 @@
 import sys
 import re
 
+import outputs
+
 class FacebookThreadsParser:
     def get_facebook_threads_set(self, input_file):
         strings_joined = '\n'.join(input_file.readlines())
@@ -45,6 +47,86 @@ class FacebookThreadsParser:
         facebook_threads_list     = self.get_facebook_threads_set(input_file)
         facebook_threads_timeline = self.get_facebook_threads_timeline(facebook_threads_list)
         return facebook_threads_timeline
+
+class Output(outputs.OutputFactory):
+
+    def __format_facebook_threads_message(self, message):
+        datetime = outputs.time_convert(message[6][:-3])
+        author_id = message[4]
+        dest_id = message[0]
+
+        participants = []
+        for p in message[1].split(","):
+            participants.append(p[6:-1])
+
+        former_participants = []
+        for fp in message[2].split(","):
+            former_participants.append(fp[6:-1])
+
+        return datetime + " by " + author_id + " to " + dest_id + " : " +\
+            message[3] +", with these participants: " + str(participants) +\
+            " and these former participants: " + str(former_participants)
+
+    def text_code(self, input_list):
+        if self.verbose:
+                print "[*] FACEBOOK THREADS"
+        text = ""
+        for facebook_tuple in input_list:
+            message = self.__format_facebook_threads_message(facebook_tuple)
+            text += message + "\n"
+            if self.verbose:
+                print "[+]", message
+        return text
+
+    def html_code(self, input_list):
+        t = outputs.HTML.Table(
+                header_row=[
+                    'Timestamp',
+                    'Author',
+                    'Receiver (group)',
+                    'Message',
+                    'Participants',
+                    'Former Participants',
+                    'Count'
+                ],
+                classes="table table-striped"
+            )
+        for message in input_list:
+            datetime = outputs.time_convert(message[6][:-3])
+            author_id = '<a href="https://facebook.com/'+\
+                message[4]+'">' + message[4] +'</a>'
+            dest_id = '<a href="https://facebook.com/'+\
+                message[0]+'">' + message[0] +'</a>'
+            count = message[5]
+
+            part = []
+            for p in message[1].split(","):
+                tp='<a href="https://facebook.com/'+p[6:-1]+'">'+p[6:-1]+'</a>'
+                part.append(tp)
+
+            fpart = []
+            for fp in message[2].split(","):
+                tfp='<a href="https://facebook.com/'+fp[6:-1]+'">'+fp[6:-1]+'</a>'
+                fpart.append(tfp)
+
+            participants = outputs.HTML.List(
+                lines=part,
+                attribs={ "class" : "list-unstyled" }
+                )
+            former_participants = outputs.HTML.List(
+                lines=fpart,
+                attribs={ "class" : "list-unstyled" }
+                )
+
+            t.rows.append([
+                datetime,
+                author_id,
+                dest_id,
+                message[3],
+                participants,
+                former_participants,
+                count])
+        return str(t)
 
 
 if __name__ == '__main__':
