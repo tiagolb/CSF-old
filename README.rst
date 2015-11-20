@@ -38,6 +38,8 @@ Cannot recover any structure of WhatsApp, Chrome/Firefox
 Roundcube:
 We are able to recover email headers in a structured way - Chrome
 
+Skype:
+Nope.
 
 This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see http://pyscaffold.readthedocs.org/.
