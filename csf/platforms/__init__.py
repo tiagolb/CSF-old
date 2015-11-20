@@ -9,6 +9,7 @@ import twitter
 import facebook
 import facebookThreads
 import roundcube
+import roundcubeOutbox
 
 TARGETS = {
     'twitter' : [
@@ -27,4 +28,8 @@ TARGETS = {
             roundcube.RoundcubeParser(),
             roundcube.Output(),
         ],
+    'roundcube_outbox' : [
+            roundcubeOutbox.RoundcubeOutboxParser(),
+            roundcubeOutbox.Output(),
+        ], 
     }

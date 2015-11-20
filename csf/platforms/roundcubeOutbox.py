@@ -2,8 +2,8 @@ import outputs
 import sys
 import re
 
-class RoundcubeParser:
-    def get_roundcube_set(self, input_file):
+class RoundcubeOutboxParser:
+    def get_roundcube_outbox_set(self, input_file):
         strings_joined = '\n'.join(input_file.readlines())
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
@@ -17,14 +17,12 @@ class RoundcubeParser:
 
         # Regex for intel extraction from each tuple
         msg_number = r'(\d+)'
-        subject = r'{\"subject\":\"(.+?)\",\"from\"'
+        subject = r'{\"subject\":\"(.+?)\",\"to\"'
         destination = r'title=\"(.+?)\"\sclass'
-        date = r'date\":\"(.+?)\",'
-        size = r'size":"(.*?)\"}'
         
         thread_regex = re.compile(
-            '.*?'.join([msg_number, subject, destination, date, size]),
-            re.VERBOSE )
+            '.*?'.join([msg_number, subject, destination]),
+            re.VERBOSE | re.DOTALL)
 
         results = []
 
@@ -36,35 +34,31 @@ class RoundcubeParser:
 
         return set(results)
 
-    def get_roundcube_timeline(self, roundcube_list):
-        return sorted(roundcube_list, key=lambda t_list: t_list[0])
+    def get_roundcube_outbox_timeline(self, roundcube_outbox_list):
+        return sorted(roundcube_outbox_list, key=lambda t_list: t_list[0])
 
     def get_timeline(self, input_file):
-        roundcube_list     = self.get_roundcube_set(input_file)
-        roundcube_timeline = self.get_roundcube_timeline(roundcube_list)
-        return roundcube_timeline
+        roundcube_outbox_list     = self.get_roundcube_outbox_set(input_file)
+        roundcube_outbox_timeline = self.get_roundcube_outbox_timeline(roundcube_outbox_list)
+        return roundcube_outbox_timeline
 
 class Output(outputs.OutputFactory):
 
-    def __format_roundcube_message(self, message):
+    def __format_roundcube_outbox_message(self, message):
         msg_id = message[0]
         subject = message[1]
         dest_id = message[2]
-        datetime = message[3]
-        size = message[4]
 
-        return datetime +\
-            " : "+ msg_id + \
+        return msg_id + \
             " : "+ subject + \
-            " to "+ dest_id +\
-            " : " + size
+            " to "+ dest_id
 
     def text_code(self, input_list):
         if self.verbose:
-                print "[*] ROUNDCUBE"
+                print "[*] ROUNDCUBE OUTBOX"
         text = ""
-        for roundcube_tuple in input_list:
-            message = self.__format_roundcube_message(roundcube_tuple)
+        for roundcube_outbox_tuple in input_list:
+            message = self.__format_roundcube_outbox_message(roundcube_outbox_tuple)
             text += message + "\n"
             if self.verbose:
                 print "[+]", message
@@ -73,11 +67,9 @@ class Output(outputs.OutputFactory):
     def html_code(self, input_list):
         t = outputs.HTML.Table(
                 header_row=[
-                    'Timestamp',
                     'Email ID',
                     'Subject',
                     'Receiver',
-                    'Size',
                 ],
                 classes="table table-striped"
             )
@@ -85,13 +77,11 @@ class Output(outputs.OutputFactory):
             msg_id = message[0]
             subject = message[1]
             dest_id = message[2]
-            datetime = message[3]
-            size = message[4]
             t.rows.append(
-                [datetime, msg_id, subject, dest_id, size])
+                [msg_id, subject, dest_id])
         return str(t)
 
 if __name__ == '__main__':
-    roundcube = RoundcubeParser()
-    for entry in roundcube.get_roundcube_set(open(sys.argv[1], "r")):
+    roundcube_outbox = RoundcubeOutboxParser()
+    for entry in roundcube.get_roundcube_outbox_set(open(sys.argv[1], "r")):
         print entry
