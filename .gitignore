@@ -43,3 +43,4 @@ cover/*
 MANIFEST
 csf/audit_result/*
 csf/external/*
+csf/external_original/*

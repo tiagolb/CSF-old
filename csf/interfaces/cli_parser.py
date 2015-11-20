@@ -45,7 +45,7 @@ def do_create(args, targets):
     os.chdir(EXTERNAL)
 
     url_init   = 'http://web.ist.utl.pt/ist172647/ramas/external/__init__.py'
-    url_module = 'http://web.ist.utl.pt/ist172647/ramas/external/newModule.py'
+    url_module = 'http://web.ist.utl.pt/ist172647/ramas/external/newtwitter.py'
     wget.download(url_init)
     wget.download(url_module)
     os.chdir(savedPath)
