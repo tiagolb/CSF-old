@@ -16,17 +16,14 @@ TARGETS = {
     'twitter' : [
             twitter.TwitterParser(),
             twitter.Output(),
-            "DirectMessage",
         ],
     'facebook' : [
             facebook.FacebookParser(),
             facebook.Output(),
-            "fbid",
         ],
     'facebook_threads' : [
             facebookThreads.FacebookThreadsParser(),
             facebookThreads.Output(),
-            None,
         ],
     'roundcube' : [
             roundcube.RoundcubeParser(),
@@ -35,9 +32,9 @@ TARGETS = {
     'roundcube_outbox' : [
             roundcubeOutbox.RoundcubeOutboxParser(),
             roundcubeOutbox.Output(),
-        ], 
+        ],
     'pidgin' : [
         pidgin.PidginParser(),
         pidgin.Output(),
-    ],     
+        ],
     }

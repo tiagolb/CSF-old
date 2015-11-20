@@ -39,25 +39,16 @@ def main():
     targets  = args.targets
     verbose  = args.verbose
     html     = args.html
-    pre_processing = args.preprocessing
 
-    #file_handler = open(filename, "r")
-
-
-    file_descriptor, abs_path = tempfile.mkstemp(suffix=".temp", prefix="ramas")
-    print abs_path
-    file_handler = os.fdopen(file_descriptor, "w+")
-
-    cmd = pre_processing
-    print cmd
-    process = subprocess.Popen(cmd, stdout=file_handler, shell=True)
-    process.communicate()[0]
+    file_handler = open(filename, "r")
 
     for key, value in targets.iteritems():
         file_handler.seek(0)
         target_parser = value[0]
         target_output = value[1]
+
         target_parser_timeline = target_parser.get_timeline(file_handler)
+
         target_output.setup(key, targets, html, verbose)
         target_output.out(target_parser_timeline)
 
