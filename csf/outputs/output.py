@@ -14,6 +14,7 @@ def time_convert(time_long):
 def urldecode(string):
     return urllib.unquote(string)
 
+# Based on the template design pattern
 class OutputFactory(object):
     targets = []
 
