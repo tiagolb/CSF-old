@@ -5,6 +5,7 @@ Changelog
 Version 0.1
 ===========
 
-- Feature A added
-- FIX: nasty bug #1729 fixed
-- add your changes here!
+- Support for Twitter, Facebook, FacebookThreads
+- Support for external modules
+- Html and Text output
+- Support for receiving raw dumps as input rather then pre-processed dumps

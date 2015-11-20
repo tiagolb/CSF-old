@@ -1,4 +1,10 @@
 # Add your requirements here like:
 # numpy
 # scipy>=0.9
-
+pbr==1.8.1
+PyInstaller==3.0
+pyscaffold==2.4.2
+setuptools-scm==1.8.0
+six==1.10.0
+wget==3.2
+wheel==0.24.0
