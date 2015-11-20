@@ -10,6 +10,7 @@ import facebook
 import facebookThreads
 import roundcube
 import roundcubeOutbox
+import pidgin
 
 TARGETS = {
     'twitter' : [
@@ -32,4 +33,8 @@ TARGETS = {
             roundcubeOutbox.RoundcubeOutboxParser(),
             roundcubeOutbox.Output(),
         ], 
+    'pidgin' : [
+        pidgin.PidginParser(),
+        pidgin.Output(),
+    ],     
     }
