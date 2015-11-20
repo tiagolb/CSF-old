@@ -8,6 +8,7 @@ except:
 import twitter
 import facebook
 import facebookThreads
+import roundcube
 
 TARGETS = {
     'twitter' : [
@@ -21,5 +22,9 @@ TARGETS = {
     'facebook_threads' : [
             facebookThreads.FacebookThreadsParser(),
             facebookThreads.Output(),
+        ],
+    'roundcube' : [
+            roundcube.RoundcubeParser(),
+            roundcube.Output(),
         ],
     }
