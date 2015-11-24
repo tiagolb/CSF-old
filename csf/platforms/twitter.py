@@ -31,15 +31,19 @@ class TwitterParser:
 
         # processed_input = re.sub(r'\\(.)', r'\1', joined_strings)
 
-        message_type = r'<div.*?DirectMessage--(sent|received).*?data-message-id=\\"(\d+)'
-        handler = r'a\s*href=\\"\\/([^"]+?)".*?data-user-id=\\"(\d+)'
-        avatar = r'DMAvatar-image\\"\s*src=\\"([^"]+?.jpe?g)\\".'
-        content = r'class=\\"TweetTextSize[^>]+?>([^<]+?)<'
-        date = r'data-time=\\"(\d+)\\"'
+        # message_type = r'\\u003cdiv.*?DirectMessage--(sent|received).*?data-message-id=\\"(\d+)'
+        # handler = r'a\s*href=\\"\\/([^"]+?)\\".*?data-user-id=\\"(\d+)'
+        # avatar = r'DMAvatar-image\\"\s*src=\\"([^"]+?.jpe?g)\\"'
+        # content = r'class=\\"TweetTextSize.+?(?:\\u003e)(.+?)(?:\\u003c)'
+        # date = r'data-time=\\"(\d+)\\"'
 
-        talk_regex = re.compile(
-            '.*?'.join([message_type, handler, avatar, content, date]),
-            re.VERBOSE | re.DOTALL)
+        message_type = r'<div\sclass="DirectMessage\s+DirectMessage--(sent|received).*?data-message-id="(\d+)'
+        handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
+        avatar = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)"'
+        content = r'class="TweetTextSize[^>]+?>([^<]+?)<'
+        date = r'data-time="(\d+)"'
+
+        talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
 
         talk = set(map(lambda t: TwitterEntry(t[0], t[1], t[2], t[3], t[4], t[5], t[6]),
                        talk_regex.findall(processed_input)))
