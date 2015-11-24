@@ -2,13 +2,14 @@ import sys
 import re
 import outputs
 
+
 class TwitterEntry:
     def __init__(self, direction, msg_id, username, user_id, avatar, content, timestamp):
         self.direction = direction
         self.msg_id = msg_id
         self.username = username
         self.user_id = user_id
-        self.avatar = avatar
+        self.avatar = re.sub(r'\\(.)', r'\1', avatar)
         self.content = content
         self.timestamp = timestamp
 
@@ -22,17 +23,19 @@ class TwitterEntry:
         return self.direction + ", " + self.msg_id + ", " + self.username + ", " + self.user_id + ", " + self.avatar + \
                ", " + self.content + ", " + self.timestamp
 
+
 class TwitterParser:
+
     def get_twitter_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
+        processed_input = '\n'.join(input_file.readlines())
 
-        processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
+        # processed_input = re.sub(r'\\(.)', r'\1', joined_strings)
 
-        message_type = r'<div.*?DirectMessage--(sent|received).*?data-message-id="(\d+)'
-        handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
-        avatar = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)".'
-        content = r'class="TweetTextSize[^>]+?>([^<]+?)<'
-        date = r'data-time="(\d+)"'
+        message_type = r'<div.*?DirectMessage--(sent|received).*?data-message-id=\\"(\d+)'
+        handler = r'a\s*href=\\"\\/([^"]+?)".*?data-user-id=\\"(\d+)'
+        avatar = r'DMAvatar-image\\"\s*src=\\"([^"]+?.jpe?g)\\".'
+        content = r'class=\\"TweetTextSize[^>]+?>([^<]+?)<'
+        date = r'data-time=\\"(\d+)\\"'
 
         talk_regex = re.compile(
             '.*?'.join([message_type, handler, avatar, content, date]),
@@ -51,6 +54,7 @@ class TwitterParser:
         twitter_set      = self.get_twitter_set(input_file)
         twitter_timeline = self.get_twitter_timeline(twitter_set)
         return twitter_timeline
+
 
 class Output(outputs.OutputFactory):
 
