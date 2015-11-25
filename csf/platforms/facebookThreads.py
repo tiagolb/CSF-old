@@ -22,7 +22,7 @@ class FacebookThreadsParser:
         # Regex for intel extraction from each tuple
         handler = r'\"snippet_sender\":\"fbid:(\d+)'
         date = r'\"timestamp\":(\d+)'
-        content = r'\"snippet\":\"(.+?)\",\"snippet_has_attachment'
+        content = r'\"snippet\":\"(.*?)\",\"snippet_has_attachment'
         recipient = r'\"thread_fbid\":\"(\d+)'
         participants = r'\"participants\":\[(.+?)\],'
         former_participants = r'\"former_participants\":\[(.*?)\],'
@@ -36,7 +36,8 @@ class FacebookThreadsParser:
 
         for t in message_tuples:
             threads = thread_regex.findall(t)
-            results.append(threads[0])
+            if len(threads) > 0:
+                results.append(threads[0])
 
         return set(results)
 
