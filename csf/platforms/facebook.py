@@ -1,6 +1,6 @@
 import sys
 import re
-
+from subprocess import Popen, PIPE
 import outputs
 
 class FacebookParser:
@@ -94,6 +94,15 @@ class Output(outputs.OutputFactory):
             t.rows.append(
                 [datetime, author_id, dest_id, outputs.urldecode(message[2])])
         return str(t)
+
+class FacebookPreProcesser:
+    def process(self, input_filename, output_file):
+        #print input_file.name, output_file.name
+        cmd = "grep -E 'fbid' " + input_filename
+        #print cmd
+        grep_process = Popen(cmd, stdout=PIPE, shell=True)
+        output_file.write(grep_process.communicate()[0])
+        #print "done"
 
 
 

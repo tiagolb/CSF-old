@@ -1,6 +1,7 @@
 import outputs
 import sys
 import re
+from subprocess import Popen, PIPE
 
 
 class PidginParser:
@@ -9,11 +10,11 @@ class PidginParser:
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        
+
         pidgin_exp = r':[0-9][0-9]:[0-9][0-9]\sP?A?M\)\s.+:.+'
-                   
+
         pidgin_regex = re.compile(pidgin_exp, re.VERBOSE)
-        
+
         message_tuples = pidgin_regex.findall(processed_input)
 
         # Regex for intel extraction from each tuple
@@ -81,6 +82,15 @@ class Output(outputs.OutputFactory):
             t.rows.append(
                 [partial_date, sender, content])
         return str(t)
+
+class PidginPreProcesser:
+    def process(self, input_filename, output_file):
+        #print input_file.name, output_file.name
+        cmd = "grep -E ':[0-9][0-9]:[0-9][0-9]' " + input_filename
+        #print cmd
+        grep_process = Popen(cmd, stdout=PIPE, shell=True)
+        output_file.write(grep_process.communicate()[0])
+        #print "done"
 
 
 if __name__ == '__main__':

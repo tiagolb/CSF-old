@@ -1,6 +1,7 @@
 import outputs
 import sys
 import re
+from subprocess import Popen, PIPE
 
 class RoundcubeParser:
     def get_roundcube_set(self, input_file):
@@ -21,7 +22,7 @@ class RoundcubeParser:
         destination = r'title=\"(.+?)\"\sclass'
         date = r'date\":\"(.+?)\",'
         size = r'size":"(.*?)\"}'
-        
+
         thread_regex = re.compile(
             '.*?'.join([msg_number, subject, destination, date, size]),
             re.VERBOSE )
@@ -90,6 +91,15 @@ class Output(outputs.OutputFactory):
             t.rows.append(
                 [datetime, msg_id, subject, dest_id, size])
         return str(t)
+
+class RoundcubePreProcesser:
+    def process(self, input_filename, output_file):
+        #print input_file.name, output_file.name
+        cmd = "grep -E 'add_message_row' " + input_filename
+        #print cmd
+        grep_process = Popen(cmd, stdout=PIPE, shell=True)
+        output_file.write(grep_process.communicate()[0])
+        #print "done"
 
 if __name__ == '__main__':
     roundcube = RoundcubeParser()

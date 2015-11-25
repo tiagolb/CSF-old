@@ -16,25 +16,31 @@ TARGETS = {
     'twitter' : [
             twitter.TwitterParser(),
             twitter.Output(),
+            twitter.TwitterPreProcesser()
         ],
     'facebook' : [
             facebook.FacebookParser(),
             facebook.Output(),
+            facebook.FacebookPreProcesser()
         ],
     'facebook_threads' : [
             facebookThreads.FacebookThreadsParser(),
             facebookThreads.Output(),
+            facebookThreads.FacebookThreadsPreProcesser()
         ],
     'roundcube' : [
             roundcube.RoundcubeParser(),
             roundcube.Output(),
+            roundcube.RoundcubePreProcesser()
         ],
     'roundcube_outbox' : [
             roundcubeOutbox.RoundcubeOutboxParser(),
             roundcubeOutbox.Output(),
+            roundcubeOutbox.RoundcubePreProcesser()
         ],
     'pidgin' : [
-        pidgin.PidginParser(),
-        pidgin.Output(),
+            pidgin.PidginParser(),
+            pidgin.Output(),
+            pidgin.PidginPreProcesser()
         ],
     }

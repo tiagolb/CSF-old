@@ -1,7 +1,7 @@
 import sys
 import re
 import outputs
-
+from subprocess import Popen, PIPE
 
 class TwitterEntry:
     def __init__(self, direction, msg_id, username, user_id, avatar, content, timestamp):
@@ -101,6 +101,15 @@ class Output(outputs.OutputFactory):
                 [datetime, avatar, messenger_id, message[5]])
         html_code = str(t)
         return html_code
+
+class TwitterPreProcesser:
+    def process(self, input_filename, output_file):
+        #print input_file.name, output_file.name
+        cmd = "grep -E 'DirectMessage|DM|data-user-id' " + input_filename
+        #print cmd
+        grep_process = Popen(cmd, stdout=PIPE, shell=True)
+        output_file.write(grep_process.communicate()[0])
+        #print "done"
 
 if __name__ == '__main__':
     twitter = TwitterParser()

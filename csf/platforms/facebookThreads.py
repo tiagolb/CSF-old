@@ -1,6 +1,6 @@
 import sys
 import re
-
+from subprocess import Popen, PIPE
 import outputs
 
 class FacebookThreadsParser:
@@ -127,6 +127,15 @@ class Output(outputs.OutputFactory):
                 former_participants,
                 count])
         return str(t)
+
+class FacebookThreadsPreProcesser:
+    def process(self, input_filename, output_file):
+        #print input_file.name, output_file.name
+        cmd = "grep -E 'fbid' " + input_filename
+        #print cmd
+        grep_process = Popen(cmd, stdout=PIPE, shell=True)
+        output_file.write(grep_process.communicate()[0])
+        #print "done"
 
 
 if __name__ == '__main__':

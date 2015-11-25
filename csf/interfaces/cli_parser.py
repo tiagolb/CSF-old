@@ -69,8 +69,10 @@ def get_cli_options(targets):
     parser_a.add_argument('-t', '--targets', nargs='+', action=make_list(targetsList),
         default=targetsList, help='Installed targets: '+str(targetsList))
     parser_a.add_argument('-v', '--verbose', action='store_true', help='verbose')
-    #parser_a.add_argument('-m', '--modules', nargs='+', action=make_list(modulesList),
-    #    default=modulesList, help='Installed modules: '+str(modulesList))
+    parser_a.add_argument('--modular', action='store_true', default=False,
+        help='Use Modular files (for testing)')
+    parser_a.add_argument('--threads', action='store_true', default=False,
+        help='Use Threads')
     parser_a.set_defaults(func=do_extract)
 
     #create_mode = False
