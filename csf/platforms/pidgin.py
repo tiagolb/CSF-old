@@ -10,8 +10,9 @@ class PidginParser:
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-
-        pidgin_exp = r':[0-9][0-9]:[0-9][0-9]\sP?A?M\)\s.+:.+'
+        
+        pidgin_exp = r':[0-9][0-9]:[0-9][0-9]\s(?:P|A)M\)\s.+:.+'
+                   
 
         pidgin_regex = re.compile(pidgin_exp, re.VERBOSE)
 
