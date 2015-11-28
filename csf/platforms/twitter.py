@@ -40,7 +40,7 @@ class TwitterParser:
         message_type = r'<div\sclass="DirectMessage\s+DirectMessage--(sent|received).*?data-message-id="(\d+)'
         handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
         avatar = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)"'
-        content = r'class="TweetTextSize[^>]+?>([^<]+?)<'
+        content = r'class="TweetTextSize[^>]+?>([^<]+?)</p>'
         date = r'data-time="(\d+)"'
 
         talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
