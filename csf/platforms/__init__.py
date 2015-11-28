@@ -11,6 +11,7 @@ import facebookThreads
 import roundcube
 import roundcubeOutbox
 import pidgin
+import skype
 
 TARGETS = {
     'twitter' : [
@@ -43,4 +44,9 @@ TARGETS = {
             pidgin.Output(),
             pidgin.PidginPreProcesser()
         ],
+    'skype' : [
+        skype.SkypeParser(),
+        skype.Output(),
+        skype.SkypePreProcesser()
+    ],
     }
