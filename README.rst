@@ -50,7 +50,7 @@ This command creates a directory called external/ which contains two files:
 - project
     * ramas.py
     * (...)
-    * external\
+    * external/
         * __init__.py  
         * newModule.py
 
@@ -77,7 +77,7 @@ class NewModuleOutput(outputs.OutputFactory):
 
 You can edit the name of these classes but not the name of these functions!
 
-Next you'll need to edit the __init__.py file with the following:
+Next you'll need to edit the `__init__.py` file with the following:
 
 ```python
 import newModule
