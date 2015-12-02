@@ -81,22 +81,22 @@ DumpIt generates a RAW dump file which can then be given as input to strings (li
 <li>project
 
 <ul>
-<li>ramas.py</li>
+<li><code>ramas.py</code></li>
 <li>(...)</li>
 <li>external/
 
 <ul>
 <li>
-<strong>init</strong>.py<br>
+<code>__init__.py</code><br>
 </li>
-<li>newModule.py</li>
+<li><code>newModule.py</code></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 
-<p>Both of these files need to be edited so the new module can be installed. Rename newModule.py file to whatever name you desire and modify the three classes which compose RAMAS' API:</p>
+<p>Both of these files need to be edited so the new module can be installed. Rename <code>newModule.py</code> file to whatever name you desire and modify the three classes which compose RAMAS' API:</p>
 
 <div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> outputs
 
@@ -145,8 +145,11 @@ MODULES <span class="pl-k">=</span> {
 <h2>
 <a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes</h2>
 
-<p>This tool was developed for Forensic Cyber Security course at IST (<a href="https://tecnico.ulisboa.pt">https://tecnico.ulisboa.pt</a>).
-This tool was tested for the Chrome Web Browser running on a Windows 7 machine.</p>
+<p>This tool was developed for Forensic Cyber Security course at IST (<a href="https://tecnico.ulisboa.pt">https://tecnico.ulisboa.pt</a>).</p>
+
+<p>This tool was tested for the Chrome Web Browser running on a Windows 7 machine.</p>
+
+<p>This tool uses the <code>HTML.py</code> module for html generation (<a href="http://www.decalage.info/python/html">http://www.decalage.info/python/html</a>)</p>
 
 <p>This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see <a href="http://pyscaffold.readthedocs.org/">http://pyscaffold.readthedocs.org/</a>.</p>
