@@ -25,12 +25,16 @@ $ python ramas.py extract --help
 ```
 
 To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.
-DumpIt generates a RAW dump file which can be given as input to RAMAS.
+DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.
 
 A simple example to extract chat messages from Facebook and present the results with HTML:
 
 ```
-$ python ramas.py extract -f DUMP_FILE -t facebook --html --threads
+$ strings RAW_DUMP_FILE > STRINGS_DUMP_FILE
+```
+
+```
+$ python ramas.py extract -f STRINGS_DUMP_FILE -t facebook --html --threads
 ```
 
 After this command is executed, a folder called audit_result/ is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.
