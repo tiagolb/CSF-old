@@ -80,15 +80,14 @@ You can edit the name of these classes but not the name of these functions!
 Next you'll need to edit the __init__.py file with the following:
 
 ```python
-
 import newModule
-
 TARGETS = {
-'newModule' : [
-  newModule.NewModuleParser(),
-  newModule.NewModuleOutput(),
-  newModule.NewModulePreProcesser()
-]}
+  'newModule' : [
+    newModule.NewModuleParser(),
+    newModule.NewModuleOutput(),
+    newModule.NewModulePreProcesser()
+  ]
+}
 ```
 
 Where you replace newModule with the name you have given to the module file. After this you can execute the following command:
