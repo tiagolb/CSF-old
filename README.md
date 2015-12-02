@@ -113,7 +113,7 @@ Authors
 Notes
 -----
 
-This tool was developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt).
+This tool was developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt) and is licensed under the open-source MIT License (https://opensource.org/licenses/MIT).
 
 This tool was tested for the Chrome Web Browser running on a Windows 7 machine.
 
