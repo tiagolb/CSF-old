@@ -37,11 +37,13 @@ import datetime
 AUDIT_DIR = "audit_result"
 AUDIT_HTML = AUDIT_DIR + "/audit.html"
 
+# convert timestamps to user friendly time strings
 def time_convert(time_long):
     return datetime.datetime.fromtimestamp(
         int(time_long)
     ).strftime('%Y-%m-%d %H:%M:%S')
 
+# decode url encoded strings
 def urldecode(string):
     return urllib.unquote(string)
 
@@ -107,23 +109,27 @@ class OutputFactory(object):
         self.text_filename = "/"+title+".txt"
         self.__create_directories()
 
-    def text_code(self): pass
-    def html_code(self): pass
+    def text_code(self): pass # to be implemented by subclasses
+    def html_code(self): pass # to be implemented by subclasses
 
     def out(self, input_list):
 
+        # if the html flag is active
         if self.html:
+            # generate header and footer html code
             header_code = self.__build_html_header()
             footer_code = self.__build_html_footer()
 
+            # create html file for this target
             file_handler = open(AUDIT_DIR + self.html_filename, "w")
-            file_handler.write(header_code)
+            file_handler.write(header_code) # write header code
             file_handler.write("<h1>"+ self.title +"</h1>")
-            file_handler.write(self.html_code(input_list))
-            file_handler.write(footer_code)
-            file_handler.close()
+            file_handler.write(self.html_code(input_list)) # write results
+            file_handler.write(footer_code) # write footer code
+            file_handler.close() # close file
 
+        # create text file for this target
         file_handler = open(AUDIT_DIR + self.text_filename, "w")
         file_handler.write("***** "+ self.title +" *****")
-        file_handler.write(self.text_code(input_list))
-        file_handler.close()
+        file_handler.write(self.text_code(input_list)) # write results
+        file_handler.close() # close file
