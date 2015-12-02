@@ -114,7 +114,10 @@ Notes
 -----
 
 This tool was developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt).
+
 This tool was tested for the Chrome Web Browser running on a Windows 7 machine.
+
+This tool uses the HTML.py module for html generation (http://www.decalage.info/python/html)
 
 This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see http://pyscaffold.readthedocs.org/.
