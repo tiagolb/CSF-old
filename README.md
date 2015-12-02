@@ -52,13 +52,13 @@ $ python ramas.py create
 This command creates a directory called external/ which contains two files:
 
 - project
-    * ramas.py
+    * `ramas.py`
     * (...)
     * external/
-        * __init__.py  
-        * newModule.py
+        * `__init__.py`  
+        * `newModule.py`
 
-Both of these files need to be edited so the new module can be installed. Rename newModule.py file to whatever name you desire and modify the three classes which compose RAMAS' API:
+Both of these files need to be edited so the new module can be installed. Rename `newModule.py` file to whatever name you desire and modify the three classes which compose RAMAS' API:
 
 ```python
 import outputs
@@ -117,7 +117,7 @@ This tool was developed for Forensic Cyber Security course at IST (https://tecni
 
 This tool was tested for the Chrome Web Browser running on a Windows 7 machine.
 
-This tool uses the HTML.py module for html generation (http://www.decalage.info/python/html)
+This tool uses the `HTML.py` module for html generation (http://www.decalage.info/python/html)
 
 This project has been set up using PyScaffold 2.4.2. For details and usage
 information on PyScaffold see http://pyscaffold.readthedocs.org/.
