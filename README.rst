@@ -85,7 +85,7 @@ Next you'll need to edit the `__init__.py` file with the following:
 
 ```python
 import newModule
-TARGETS = {
+MODULES = {
   'newModule' : [
     newModule.NewModuleParser(),
     newModule.NewModuleOutput(),
