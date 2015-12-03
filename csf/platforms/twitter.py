@@ -34,6 +34,7 @@ import re
 import outputs
 from subprocess import Popen, PIPE
 
+# This a helper class to filter duplicated twitter messages when used in a Set
 class TwitterEntry:
     def __init__(self, direction, msg_id, username, user_id, avatar, content, timestamp):
         self.direction = direction
@@ -60,14 +61,7 @@ class TwitterParser:
     def get_twitter_set(self, input_file):
         processed_input = '\n'.join(input_file.readlines())
 
-        # processed_input = re.sub(r'\\(.)', r'\1', joined_strings)
-
-        # message_type = r'\\u003cdiv.*?DirectMessage--(sent|received).*?data-message-id=\\"(\d+)'
-        # handler = r'a\s*href=\\"\\/([^"]+?)\\".*?data-user-id=\\"(\d+)'
-        # avatar = r'DMAvatar-image\\"\s*src=\\"([^"]+?.jpe?g)\\"'
-        # content = r'class=\\"TweetTextSize.+?(?:\\u003e)(.+?)(?:\\u003c)'
-        # date = r'data-time=\\"(\d+)\\"'
-
+        # Regex for intel extraction of message tuples
         message_type = r'<div\sclass="DirectMessage\s+DirectMessage--(sent|received).*?data-message-id="(\d+)'
         handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
         avatar = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)"'
@@ -135,12 +129,9 @@ class Output(outputs.OutputFactory):
 
 class TwitterPreProcesser:
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E 'DirectMessage|DM|data-user-id' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
 
 if __name__ == '__main__':
     twitter = TwitterParser()
