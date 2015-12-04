@@ -35,7 +35,7 @@ To extract data using RAMAS, change directory to `csf/` and check the following 
 $ python ramas.py extract --help
 ```
 
-To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.
+To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system. (Note: if you want to test RAMAS without extracting a dump from memory you may refer to the next section - Testing)
 DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.
 
 A simple example to extract chat messages from Facebook and present the results with HTML:
@@ -49,6 +49,16 @@ $ python ramas.py extract -f STRINGS_DUMP_FILE -t facebook --html --threads
 ```
 
 After this command is executed, a folder called `audit_result/` is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.
+
+
+Testing
+-------
+
+If you want to test RAMAS we suggest you use the following file:
+[Dump in DropBox](https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0)
+This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.
+
+Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.
 
 
 Extension Development
@@ -112,16 +122,6 @@ $ python ramas.py extract --help
 ```
 
 to check if the new module is installed.
-
-
-Testing
--------
-
-If you want to test RAMAS we suggest you use the following file:
-[Dump in DropBox](https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0)
-This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.
-
-Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.
 
 
 Documentation
