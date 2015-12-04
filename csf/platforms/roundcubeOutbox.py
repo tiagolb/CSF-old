@@ -36,26 +36,26 @@ from subprocess import Popen, PIPE
 
 class RoundcubeOutboxParser:
     def get_roundcube_outbox_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
-
+        strings_joined  = '\n'.join(input_file.readlines())
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        # Input split into message blocks tuples
+        # Gather relevant blocks containing messages
         begin = r'this\.add\_message\_row\((.+?)\)\;'
 
         message_block_regex = re.compile(begin, re.VERBOSE)
-
         message_tuples = message_block_regex.findall(processed_input)
 
-        # Regex for intel extraction from each tuple
+        # Regex fields for pertinent data extraction in each block
         msg_number = r'(\d+)'
         subject = r'{\"subject\":\"(.+?)\",\"to\"'
         destination = r'title=\"(.+?)\"\sclass'
 
+        # Full regex for a conversation snippet
         thread_regex = re.compile(
             '.*?'.join([msg_number, subject, destination]),
             re.VERBOSE | re.DOTALL)
 
+        # Message blocks' data extraction loop
         results = []
 
         for t in message_tuples:
@@ -77,7 +77,7 @@ class RoundcubeOutboxParser:
 class Output(outputs.OutputFactory):
 
     def __format_roundcube_outbox_message(self, message):
-        msg_id = message[0]
+        msg_id  = message[0]
         subject = message[1]
         dest_id = message[2]
 
@@ -106,7 +106,7 @@ class Output(outputs.OutputFactory):
                 classes="table table-striped"
             )
         for message in input_list:
-            msg_id = message[0]
+            msg_id  = message[0]
             subject = message[1]
             dest_id = message[2]
             t.rows.append(
@@ -114,13 +114,11 @@ class Output(outputs.OutputFactory):
         return str(t)
 
 class RoundcubePreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E 'add_message_row' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
 
 if __name__ == '__main__':
     roundcube_outbox = RoundcubeOutboxParser()

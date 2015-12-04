@@ -36,32 +36,34 @@ import outputs
 
 class FacebookParser:
     def get_facebook_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
-
+        strings_joined  = '\n'.join(input_file.readlines())
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        # Input split into message blocks tuples
+        # Gather relevant blocks containing messages
         begin = r'\[thread_id\]&message_batch\[0\](.+?)&client=mercury'
 
         message_block_regex = re.compile(begin, re.VERBOSE | re.DOTALL)
 
         message_tuples = message_block_regex.findall(processed_input)
 
-        # Regex for intel extraction from each tuple
+        # Regex fields for pertinent data extraction in each block
         handler = r'\[author\]=fbid%3A(\d+)'
-        date = r'\[timestamp\]=(\d+)'
+        date    = r'\[timestamp\]=(\d+)'
         content = r'\[body\]=(.+?)&message_batch'
         single_recipient = r'\[other_user_fbid\]=(\d+)'
-        group_recipient = r'\[thread_fbid\]=(\d+)'
+        group_recipient  = r'\[thread_fbid\]=(\d+)'
 
+        # Full regex for a message with a single recipient
         single_talk_regex = re.compile(
             '.*?'.join([handler, date, content, single_recipient]),
             re.VERBOSE | re.DOTALL)
 
+        # Full regex for a message with a single recipient
         group_talk_regex = re.compile(
             '.*?'.join([handler, date, content, group_recipient]),
             re.VERBOSE | re.DOTALL)
 
+        # Message blocks' data extraction loop
         results = []
 
         for t in message_tuples:
@@ -87,9 +89,9 @@ class FacebookParser:
 class Output(outputs.OutputFactory):
 
     def __format_facebook_message(self, message):
-        datetime = outputs.time_convert(message[1][:-3])
+        datetime  = outputs.time_convert(message[1][:-3])
         author_id = message[0]
-        dest_id = message[3]
+        dest_id   = message[3]
         return datetime +\
             " by "+ author_id + \
             " to "+ dest_id +\
@@ -117,23 +119,22 @@ class Output(outputs.OutputFactory):
                 classes="table table-striped"
             )
         for message in input_list:
-            datetime = outputs.time_convert(message[1][:-3])
+            datetime  = outputs.time_convert(message[1][:-3])
             author_id = '<a href="https://facebook.com/'+\
                 message[0]+'">' + message[0] +'</a>'
-            dest_id = '<a href="https://facebook.com/'+\
+            dest_id   = '<a href="https://facebook.com/'+\
                 message[3]+'">' + message[3] +'</a>'
             t.rows.append(
                 [datetime, author_id, dest_id, outputs.urldecode(message[2])])
         return str(t)
 
 class FacebookPreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E 'fbid' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
+
 
 
 

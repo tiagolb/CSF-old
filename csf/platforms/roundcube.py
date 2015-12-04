@@ -36,28 +36,28 @@ from subprocess import Popen, PIPE
 
 class RoundcubeParser:
     def get_roundcube_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
-
+        strings_joined  = '\n'.join(input_file.readlines())
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        # Input split into message blocks tuples
+        # Gather relevant blocks containing messages
         begin = r'this\.add\_message\_row\((.+?)\)\;'
 
         message_block_regex = re.compile(begin, re.VERBOSE)
-
         message_tuples = message_block_regex.findall(processed_input)
 
-        # Regex for intel extraction from each tuple
+        # Regex fields for pertinent data extraction in each block
         msg_number = r'(\d+)'
         subject = r'{\"subject\":\"(.+?)\",\"from\"'
         destination = r'title=\"(.+?)\"\sclass'
         date = r'date\":\"(.+?)\",'
         size = r'size":"(.*?)\"}'
 
+        # Full regex for a conversation snippet
         thread_regex = re.compile(
             '.*?'.join([msg_number, subject, destination, date, size]),
             re.VERBOSE )
 
+        # Message blocks' data extraction loop
         results = []
 
         for t in message_tuples:
@@ -79,11 +79,11 @@ class RoundcubeParser:
 class Output(outputs.OutputFactory):
 
     def __format_roundcube_message(self, message):
-        msg_id = message[0]
-        subject = message[1]
-        dest_id = message[2]
+        msg_id   = message[0]
+        subject  = message[1]
+        dest_id  = message[2]
         datetime = message[3]
-        size = message[4]
+        size     = message[4]
 
         return datetime +\
             " : "+ msg_id + \
@@ -114,23 +114,21 @@ class Output(outputs.OutputFactory):
                 classes="table table-striped"
             )
         for message in input_list:
-            msg_id = message[0]
-            subject = message[1]
-            dest_id = message[2]
+            msg_id   = message[0]
+            subject  = message[1]
+            dest_id  = message[2]
             datetime = message[3]
-            size = message[4]
+            size     = message[4]
             t.rows.append(
                 [datetime, msg_id, subject, dest_id, size])
         return str(t)
 
 class RoundcubePreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E 'add_message_row' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
 
 if __name__ == '__main__':
     roundcube = RoundcubeParser()

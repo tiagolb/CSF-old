@@ -61,12 +61,12 @@ class TwitterParser:
     def get_twitter_set(self, input_file):
         processed_input = '\n'.join(input_file.readlines())
 
-        # Regex for intel extraction of message tuples
+        # Regex fields for pertinent data extraction in each block
         message_type = r'<div\sclass="DirectMessage\s+DirectMessage--(sent|received).*?data-message-id="(\d+)'
-        handler = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
-        avatar = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)"'
-        content = r'class="TweetTextSize[^>]+?>([^<]+?)</p>'
-        date = r'data-time="(\d+)"'
+        handler      = r'a\s*href="/([^"]+?)".*?data-user-id="(\d+)'
+        avatar       = r'DMAvatar-image"\s*src="([^"]+?.jpe?g)"'
+        content      = r'class="TweetTextSize[^>]+?>([^<]+?)</p>'
+        date         = r'data-time="(\d+)"'
 
         talk_regex = re.compile('.*?'.join([message_type, handler, avatar, content, date]), re.VERBOSE | re.DOTALL)
 
@@ -89,7 +89,7 @@ class Output(outputs.OutputFactory):
 
     def __format_twitter_message(self, message):
         messenger_id = message[2]+"("+message[3]+")"
-        datetime = outputs.time_convert(message[6])
+        datetime     = outputs.time_convert(message[6])
         formated_message = datetime +\
             " by " + messenger_id +\
             ":"   + message[5]
@@ -120,7 +120,7 @@ class Output(outputs.OutputFactory):
             messenger_id = '<a href="https://twitter.com/'+\
                 message[2]+'">' + message[2] +\
                 '</a> ('+message[3]+')'
-            avatar = '<img src="' + message[4] + '" height="40" width="40" />'
+            avatar   = '<img src="' + message[4] + '" height="40" width="40" />'
             datetime = outputs.time_convert(message[6])
             t.rows.append(
                 [datetime, avatar, messenger_id, message[5]])
@@ -128,6 +128,7 @@ class Output(outputs.OutputFactory):
         return html_code
 
 class TwitterPreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
         cmd = "grep -E 'DirectMessage|DM|data-user-id' " + input_filename
         grep_process = Popen(cmd, stdout=PIPE, shell=True)

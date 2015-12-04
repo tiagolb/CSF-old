@@ -37,27 +37,27 @@ from subprocess import Popen, PIPE
 
 class PidginParser:
     def get_pidgin_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
-
+        strings_joined  = '\n'.join(input_file.readlines())
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        
+        # Gather relevant blocks containing messages
         pidgin_exp = r':[0-9][0-9]:[0-9][0-9]\s(?:P|A)M\)\s.+:.+'
-                   
 
-        pidgin_regex = re.compile(pidgin_exp, re.VERBOSE)
-
+        pidgin_regex   = re.compile(pidgin_exp, re.VERBOSE)
         message_tuples = pidgin_regex.findall(processed_input)
 
-        # Regex for intel extraction from each tuple
+        # Regex fields for pertinent data extraction in each block
         partial_date = r'(.+?)\)'
         sender = r'\s(.+?):'
         content = r'(.+)'
 
+        # Full regex for a conversation snippet
         thread_regex = re.compile(
             '.*?'.join([partial_date, sender, content]),
             re.VERBOSE )
 
+
+        # Message blocks' data extraction loop
         results = []
 
         for t in message_tuples:
@@ -80,7 +80,7 @@ class Output(outputs.OutputFactory):
 
     def __format_pidgin_message(self, message):
         partial_date = message[0]
-        sender = message[1]
+        sender  = message[1]
         content = message[2]
 
         return partial_date +\
@@ -109,20 +109,18 @@ class Output(outputs.OutputFactory):
             )
         for message in input_list:
             partial_date = "--" + message[0]
-            sender = message[1]
+            sender  = message[1]
             content = message[2]
             t.rows.append(
                 [partial_date, sender, content])
         return str(t)
 
 class PidginPreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E ':[0-9][0-9]:[0-9][0-9]' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
 
 
 if __name__ == '__main__':

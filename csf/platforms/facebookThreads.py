@@ -36,33 +36,32 @@ import outputs
 
 class FacebookThreadsParser:
     def get_facebook_threads_set(self, input_file):
-        strings_joined = '\n'.join(input_file.readlines())
-
+        strings_joined  = '\n'.join(input_file.readlines())
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
-        # Input split into message blocks tuples
+        # Gather relevant blocks containing messages
         begin = r'{\"thread_id\":(.+?)titan_originated_thread_id'
 
         message_block_regex = re.compile(begin, re.VERBOSE | re.DOTALL)
 
         message_tuples = message_block_regex.findall(processed_input)
-        """
-        for i in message_tuples:
-            print i+"\n"
-        """
-        # Regex for intel extraction from each tuple
-        handler = r'\"snippet_sender\":\"fbid:(\d+)'
-        date = r'\"timestamp\":(\d+)'
-        content = r'\"snippet\":\"(.*?)\",\"snippet_has_attachment'
-        recipient = r'\"thread_fbid\":\"(\d+)'
-        participants = r'\"participants\":\[(.+?)\],'
-        former_participants = r'\"former_participants\":\[(.*?)\],'
-        message_count = r'\"message_count\":(\d+)'
 
+
+        # Regex fields for pertinent data extraction in each block
+        handler   = r'\"snippet_sender\":\"fbid:(\d+)'
+        date      = r'\"timestamp\":(\d+)'
+        content   = r'\"snippet\":\"(.*?)\",\"snippet_has_attachment'
+        recipient = r'\"thread_fbid\":\"(\d+)'
+        participants  = r'\"participants\":\[(.+?)\],'
+        message_count = r'\"message_count\":(\d+)'
+        former_participants = r'\"former_participants\":\[(.*?)\],'
+
+        # Full regex for a conversation snippet
         thread_regex = re.compile(
             '.*?'.join([recipient, participants, former_participants, content, handler, message_count, date]),
             re.VERBOSE | re.DOTALL)
 
+        # Message blocks' data extraction loop
         results = []
 
         for t in message_tuples:
@@ -124,30 +123,30 @@ class Output(outputs.OutputFactory):
                 classes="table table-striped"
             )
         for message in input_list:
-            datetime = outputs.time_convert(message[6][:-3])
+            datetime  = outputs.time_convert(message[6][:-3])
             author_id = '<a href="https://facebook.com/'+\
                 message[4]+'">' + message[4] +'</a>'
-            dest_id = '<a href="https://facebook.com/'+\
+            dest_id   = '<a href="https://facebook.com/'+\
                 message[0]+'">' + message[0] +'</a>'
-            count = message[5]
+            count     = message[5]
 
             part = []
             for p in message[1].split(","):
-                tp='<a href="https://facebook.com/'+p[6:-1]+'">'+p[6:-1]+'</a>'
+                tp = '<a href="https://facebook.com/'+p[6:-1]+'">'+p[6:-1]+'</a>'
                 part.append(tp)
 
             fpart = []
             for fp in message[2].split(","):
-                tfp='<a href="https://facebook.com/'+fp[6:-1]+'">'+fp[6:-1]+'</a>'
+                tfp = '<a href="https://facebook.com/'+fp[6:-1]+'">'+fp[6:-1]+'</a>'
                 fpart.append(tfp)
 
             participants = outputs.HTML.List(
-                lines=part,
-                attribs={ "class" : "list-unstyled" }
+                lines = part,
+                attribs = { "class" : "list-unstyled" }
                 )
             former_participants = outputs.HTML.List(
-                lines=fpart,
-                attribs={ "class" : "list-unstyled" }
+                lines = fpart,
+                attribs = { "class" : "list-unstyled" }
                 )
 
             t.rows.append([
@@ -161,13 +160,11 @@ class Output(outputs.OutputFactory):
         return str(t)
 
 class FacebookThreadsPreProcesser:
+    # Pre processing of dump file by an identifying field of a relevant block
     def process(self, input_filename, output_file):
-        #print input_file.name, output_file.name
         cmd = "grep -E 'fbid' " + input_filename
-        #print cmd
         grep_process = Popen(cmd, stdout=PIPE, shell=True)
         output_file.write(grep_process.communicate()[0])
-        #print "done"
 
 
 if __name__ == '__main__':
