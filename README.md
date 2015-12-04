@@ -35,7 +35,10 @@ To extract data using RAMAS, change directory to `csf/` and check the following 
 $ python ramas.py extract --help
 ```
 
-To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system. (Note: if you want to test RAMAS without extracting a dump from memory you may refer to the next section - Testing)
+To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.
+
+Note: if you want to test RAMAS without extracting a dump from memory you may refer to the next section - Testing
+
 DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.
 
 A simple example to extract chat messages from Facebook and present the results with HTML:
