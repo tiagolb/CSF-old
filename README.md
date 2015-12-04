@@ -18,7 +18,18 @@ As of this moment the supported (of the shelf) applications are the following:
 Usage
 -----
 
-To extract data using RAMAS, check the following command for help:
+First off, to setup RAMAS you need to clone the repository and at the root of the reporitory perform the following command:
+
+```
+$ pip install -r requirements.txt
+```
+This installs all the dependencies of RAMAS automatically. This may require root access, in this case perfrom the same command with the sudo prefix:
+
+```
+$ sudo pip install -r requirements.txt
+```
+
+To extract data using RAMAS, change directory to `csf/` and check the following command for help:
 
 ```
 $ python ramas.py extract --help
