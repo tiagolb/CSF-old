@@ -48,7 +48,7 @@ $ strings RAW_DUMP_FILE > STRINGS_DUMP_FILE
 $ python ramas.py extract -f STRINGS_DUMP_FILE -t facebook --html --threads
 ```
 
-After this command is executed, a folder called audit_result/ is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.
+After this command is executed, a folder called `audit_result/` is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.
 
 
 Extension Development
