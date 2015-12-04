@@ -146,7 +146,8 @@ Notes
 
 This tool was developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt) and is licensed under the open-source MIT License (https://opensource.org/licenses/MIT).
 
-This tool was tested for the Chrome Web Browser running on a Windows 7 machine.
+This tool was tested for dumps from the Chrome Web Browser running on a Windows 7 machine.
+This tool was tested in a 64-bit Ubuntu 14.04 LTS with python 2.7.6.
 
 This tool uses the `HTML.py` module for html generation (http://www.decalage.info/python/html)
 
