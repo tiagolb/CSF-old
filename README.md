@@ -127,12 +127,11 @@ Note that the result of analysing this memory dump does not show results for sky
 Documentation
 -------------
 
-To generation python documentation in this project you must run the following command whilst in the root of the project:
-
+To generate python documentation in this project you must run the following command whilst in the root of the project:
 ```
 $ python setup.py docs
 ```
-The documentation will then be available at `docs/_build/html`.
+The Sphinx documentation will then be available at `docs/_build/html`.
 
 
 Authors
