@@ -81,7 +81,7 @@ def do_create(args, targets):
 
     # download the example module from these URLs
     url_init   = 'http://web.ist.utl.pt/ist172647/ramas/external/__init__.py'
-    url_module = 'http://web.ist.utl.pt/ist172647/ramas/external/newtwitter.py'
+    url_module = 'http://web.ist.utl.pt/ist172647/ramas/external/newModule.py'
     wget.download(url_init)
     wget.download(url_module)
     
