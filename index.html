@@ -64,8 +64,11 @@
 <pre><code>$ python ramas.py extract --help
 </code></pre>
 
-<p>To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.
-DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.</p>
+<p>To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.</p>
+
+<p>Note: if you want to test RAMAS without extracting a dump from memory you may refer to the next section - Testing</p>
+
+<p>DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.</p>
 
 <p>A simple example to extract chat messages from Facebook and present the results with HTML:</p>
 
@@ -76,6 +79,15 @@ DumpIt generates a RAW dump file which can then be given as input to strings (li
 </code></pre>
 
 <p>After this command is executed, a folder called <code>audit_result/</code> is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.</p>
+
+<h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>If you want to test RAMAS we suggest you use the following file:
+<a href="https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0">Dump in DropBox</a>
+This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.</p>
+
+<p>Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.</p>
 
 <h2>
 <a id="extension-development" class="anchor" href="#extension-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extension Development</h2>
@@ -144,15 +156,6 @@ MODULES <span class="pl-k">=</span> {
 </code></pre>
 
 <p>to check if the new module is installed.</p>
-
-<h2>
-<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h2>
-
-<p>If you want to test RAMAS we suggest you use the following file:
-<a href="https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0">Dump in DropBox</a>
-This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.</p>
-
-<p>Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.</p>
 
 <h2>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
