@@ -49,7 +49,17 @@
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>To extract data using RAMAS, check the following command for help:</p>
+<p>First off, to setup RAMAS you need to clone the repository and, at the root of the repository, perform the following command:</p>
+
+<pre><code>$ pip install -r requirements.txt
+</code></pre>
+
+<p>This installs all the dependencies of RAMAS automatically. This may require root access, in this case perfrom the same command with the sudo prefix:</p>
+
+<pre><code>$ sudo pip install -r requirements.txt
+</code></pre>
+
+<p>To extract data using RAMAS, change directory to <code>csf/</code> and check the following command for help:</p>
 
 <pre><code>$ python ramas.py extract --help
 </code></pre>
@@ -65,7 +75,7 @@ DumpIt generates a RAW dump file which can then be given as input to strings (li
 <pre><code>$ python ramas.py extract -f STRINGS_DUMP_FILE -t facebook --html --threads
 </code></pre>
 
-<p>After this command is executed, a folder called audit_result/ is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.</p>
+<p>After this command is executed, a folder called <code>audit_result/</code> is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.</p>
 
 <h2>
 <a id="extension-development" class="anchor" href="#extension-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extension Development</h2>
@@ -141,6 +151,8 @@ MODULES <span class="pl-k">=</span> {
 <p>If you want to test RAMAS we suggest you use the following file:
 <a href="https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0">Dump in DropBox</a>
 This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.</p>
+
+<p>Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.</p>
 
 <h2>
 <a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
