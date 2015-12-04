@@ -101,8 +101,7 @@ class TableCell (object):
     a TableCell object is used to create a cell in a HTML table. (TD or TH)
 
     Attributes:
-    - text: text in the cell (may contain HTML tags). May be any object which
-            can be converted to a string using str().
+    - text: text in the cell (may contain HTML tags). May be any object which can be converted to a string using str().
     - header: bool, false for a normal data cell (TD), true for a header cell (TH)
     - bgcolor: str, background color
     - width: str, width
@@ -162,8 +161,7 @@ class TableRow (object):
     a TableRow object is used to create a row in a HTML table. (TR tag)
 
     Attributes:
-    - cells: list, tuple or any iterable, containing one string or TableCell
-             object for each cell
+    - cells: list, tuple or any iterable, containing one string or TableCell object for each cell
     - header: bool, true for a header row (TH), false for a normal data row (TD)
     - bgcolor: str, background color
     - col_align, col_valign, col_char, col_charoff, col_styles: see Table class
@@ -222,8 +220,7 @@ class Table (object):
     a Table object is used to create a HTML table. (TABLE tag)
 
     Attributes:
-    - rows: list, tuple or any iterable, containing one iterable or TableRow
-            object for each row
+    - rows: list, tuple or any iterable, containing one iterable or TableRow object for each row
     - header_row: list, tuple or any iterable, containing the header row (optional)
     - border: str or int, border width
     - style: str, table style in CSS syntax (thin black borders by default)
