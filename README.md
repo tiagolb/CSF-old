@@ -18,7 +18,7 @@ As of this moment the supported (of the shelf) applications are the following:
 Usage
 -----
 
-First off, to setup RAMAS you need to clone the repository and at the root of the reporitory perform the following command:
+First off, to setup RAMAS you need to clone the repository and, at the root of the repository, perform the following command:
 
 ```
 $ pip install -r requirements.txt
