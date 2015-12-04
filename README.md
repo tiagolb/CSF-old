@@ -74,7 +74,7 @@ Both of these files need to be edited so the new module can be installed. Rename
 ```python
 import outputs
 
-class NewModulePreProcesser:
+class NewModulePreProcessor:
     def process(self, input_filename, output_file):
         # to be implemented
 
@@ -100,7 +100,7 @@ MODULES = {
   'newModule' : [
     newModule.NewModuleParser(),
     newModule.NewModuleOutput(),
-    newModule.NewModulePreProcesser()
+    newModule.NewModulePreProcessor()
   ]
 }
 ```
@@ -122,6 +122,17 @@ If you want to test RAMAS we suggest you use the following file:
 This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.
 
 Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.
+
+
+Documentation
+-------------
+
+To generation python documentation in this project you must run the following command whilst in the root of the project:
+
+```
+$ python setup.py docs
+```
+The documentation will then be available at `docs/_build/html`.
 
 
 Authors
