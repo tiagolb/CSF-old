@@ -2,6 +2,7 @@ import sys, os
 from PyQt4 import QtGui, QtCore
 import sqlite3 as lite
 
+from dbSchema import initDatabase
 from views.home import Ui_HomePage
 from views.createCase import Ui_CreateCase
 from views.caseManager import Ui_CaseManager
@@ -11,7 +12,7 @@ from views.addImage import Ui_AddImage
 from models.caseModel import CaseModel
 from models.imageModel import ImageModel
 
-dbName = 'test.db'
+dbName = 'ramas.db'
 
 class MainWindow(QtGui.QMainWindow):
     ######################################
@@ -108,8 +109,14 @@ class MainWindow(QtGui.QMainWindow):
         #update available cases shown in list
         name = self.createCase.lineEdit.text()
         description = self.createCase.lineEdit_2.text()
-        self.caseModel.insertCase(name, description)
-        self.central_widget.setCurrentWidget(self.caseManager)
+        try:
+            self.caseModel.insertCase(name, description)
+            self.central_widget.setCurrentWidget(self.caseManager)
+        except lite.Error, e:
+            msg = "A case named \"" + str(name) + "\" already exists."
+            reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
+
+
 
     def imageAdding(self):
         self.central_widget.setCurrentWidget(self.imageAddition)
@@ -122,9 +129,18 @@ class MainWindow(QtGui.QMainWindow):
         #get full timestamp in a human readable string
         timestamp = self.imageAddition.dateTimeEdit.dateTime().toPyDateTime()
 
-        self.imageModel.insertImage(str(self.imageAddition.lineEdit_3.text()), self.current_case,
-            self.imageAddition.lineEdit.text(), timestamp)
-        self.central_widget.setCurrentWidget(self.imageManager)
+        if(not os.path.isfile(str(self.imageAddition.lineEdit_3.text()))):
+            msg = "File does not exist."
+            reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
+        else:
+            try:
+                self.imageModel.insertImage(str(self.imageAddition.lineEdit_3.text()), self.current_case,
+                    self.imageAddition.lineEdit.text(), timestamp)
+                self.central_widget.setCurrentWidget(self.imageManager)
+            except lite.Error, e:
+                msg = "This image file was already added to the case."
+                reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
+
 
     def analyse(self):
         #open dialog to select files
@@ -133,12 +149,25 @@ class MainWindow(QtGui.QMainWindow):
     def deleteCase(self):
         #Get row index of selected case
         caseIndex = self.caseManager.listView.selectedIndexes()
-        self.caseModel.deleteCase(caseIndex[0].row(), caseIndex[0].data().toString())
+        del_msg = "Are you sure you want to delete all information pertaining to case " + caseIndex[0].data().toString() + "?"
+        reply = QtGui.QMessageBox.warning(self, 'Message', del_msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+
+        if(reply == QtGui.QMessageBox.Yes):
+            self.caseModel.deleteCase(caseIndex[0].row(), caseIndex[0].data().toString())
+        else:
+            pass
 
     def deleteImage(self):
         #Get row index of selected image
         imageIndex = self.imageManager.listView.selectedIndexes()
-        self.imageModel.deleteImage(imageIndex[0].row(), imageIndex[0].data().toString(), self.current_case)
+        del_msg = "Are you sure you want to delete all information pertaining to image " + imageIndex[0].data().toString() + "?"
+        reply = QtGui.QMessageBox.warning(self, 'Message', del_msg, QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+
+        if(reply == QtGui.QMessageBox.Yes):
+            self.imageModel.deleteImage(imageIndex[0].row(), imageIndex[0].data().toString(), self.current_case)
+        else:
+            pass
+
 
     def caseManager(self):
         self.central_widget.setCurrentWidget(self.caseManager)
@@ -163,8 +192,12 @@ class MainWindow(QtGui.QMainWindow):
         try:
             self.dbCon = lite.connect(dbName)
 
+            initDatabase(self.dbCon)
+
         except lite.Error, e:
-            print 'send error to uiController'
+            msg = "Critical error in database. Remove ramas.db and try again."
+            reply = QtGui.QMessageBox.critical(self, 'Message', msg, QtGui.QMessageBox.Ok)
+            sys.exit(0)
 
         self.current_case = "none"
         self.central_widget = QtGui.QStackedWidget()
