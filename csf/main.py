@@ -1,5 +1,5 @@
 import sys, os
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 import sqlite3 as lite
 
 from views.home import Ui_HomePage
@@ -73,6 +73,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageAddition.pushButton_3.clicked.connect(self.searchImage)
         self.imageAddition.lineEdit.textChanged.connect(self.imageInfoChanged)
         self.imageAddition.lineEdit_3.textChanged.connect(self.imageInfoChanged)
+        self.imageAddition.dateTimeEdit.setDateTime(QtCore.QDateTime.currentDateTime())
         return self.imageAddition
     ######################################
     #Register Callbacks
@@ -118,8 +119,9 @@ class MainWindow(QtGui.QMainWindow):
         self.imageAddition.lineEdit_3.setText(imageLocation)
 
     def addImage(self):
+        #get full timestamp in a human readable string
         timestamp = self.imageAddition.dateTimeEdit.dateTime().toPyDateTime()
-        print timestamp
+
         self.imageModel.insertImage(str(self.imageAddition.lineEdit_3.text()), self.current_case,
             self.imageAddition.lineEdit.text(), timestamp)
         self.central_widget.setCurrentWidget(self.imageManager)
