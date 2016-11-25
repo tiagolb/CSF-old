@@ -12,6 +12,7 @@ class CaseModel(QtGui.QStandardItemModel):
 		rows = cur.fetchall()
 		for row in rows:
 			item = QtGui.QStandardItem()
+			item.setEditable(False)
 			item.setText(row[0])
 			self.appendRow(item)
 		self.dbCon.commit()
@@ -23,6 +24,7 @@ class CaseModel(QtGui.QStandardItemModel):
 		self.dbCon.commit()
 
 		item = QtGui.QStandardItem()
+		item.setEditable(False)
 		item.setText(name)
 
 		self.appendRow(item)
@@ -33,4 +35,3 @@ class CaseModel(QtGui.QStandardItemModel):
 		self.dbCon.commit()
 
 		self.takeRow(row)
-		
