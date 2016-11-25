@@ -6,8 +6,10 @@ from views.home import Ui_HomePage
 from views.createCase import Ui_CreateCase
 from views.caseManager import Ui_CaseManager
 from views.imageManager import Ui_ImageManager
+from views.addImage import Ui_AddImage
 
 from models.caseModel import CaseModel
+from models.imageModel import ImageModel
 
 dbName = 'test.db'
 
@@ -29,8 +31,8 @@ class MainWindow(QtGui.QMainWindow):
         self.createCase.pushButton.clicked.connect(self.addCase)
         self.createCase.pushButton.setEnabled(False)
         self.createCase.pushButton_2.clicked.connect(self.cancelCaseManager)
-        self.createCase.lineEdit.textChanged.connect(self.caseNameChanged)
-        self.createCase.lineEdit_2.textChanged.connect(self.caseNameChanged)
+        self.createCase.lineEdit.textChanged.connect(self.caseInfoChanged)
+        self.createCase.lineEdit_2.textChanged.connect(self.caseInfoChanged)
         return self.createCase
 
     def setCaseManager(self):
@@ -52,16 +54,26 @@ class MainWindow(QtGui.QMainWindow):
         self.imageManager = Ui_ImageManager()
         self.imageManager.setupUi(self.imageManager)
         self.imageManager.listView.clicked.connect(self.imageSelected)
-        self.imageManager.pushButton.clicked.connect(self.addImage)
+        self.imageManager.pushButton.clicked.connect(self.imageAdding)
         self.imageManager.pushButton_3.setEnabled(False)
         self.imageManager.pushButton_3.clicked.connect(self.deleteImage)
         self.imageManager.pushButton_2.clicked.connect(self.analyse)
         self.imageManager.pushButton_4.clicked.connect(self.cancelImageManager)
 
-        self.imageModel = QtGui.QStandardItemModel(self.imageManager.listView)
+        self.imageModel = ImageModel(self.imageManager.listView, self.dbCon)
         self.imageManager.listView.setModel(self.imageModel)
         return self.imageManager
 
+    def setAddImage(self):
+        self.imageAddition = Ui_AddImage()
+        self.imageAddition.setupUi(self.imageAddition)
+        self.imageAddition.pushButton.clicked.connect(self.addImage)
+        self.imageAddition.pushButton.setEnabled(False)
+        self.imageAddition.pushButton_2.clicked.connect(self.cancelImageManager)
+        self.imageAddition.pushButton_3.clicked.connect(self.searchImage)
+        self.imageAddition.lineEdit.textChanged.connect(self.imageInfoChanged)
+        self.imageAddition.lineEdit_3.textChanged.connect(self.imageInfoChanged)
+        return self.imageAddition
     ######################################
     #Register Callbacks
     ######################################
@@ -75,11 +87,17 @@ class MainWindow(QtGui.QMainWindow):
     def imageSelected(self):
         self.imageManager.pushButton_3.setEnabled(True)
 
-    def caseNameChanged(self):
+    def caseInfoChanged(self):
         if(len(self.createCase.lineEdit.text()) !=0 and len(self.createCase.lineEdit_2.text()) != 0):
             self.createCase.pushButton.setEnabled(True)
         else:
             self.createCase.pushButton.setEnabled(False)
+
+    def imageInfoChanged(self):
+        if(len(self.imageAddition.lineEdit.text()) !=0 and len(self.imageAddition.lineEdit_3.text()) != 0):
+            self.imageAddition.pushButton.setEnabled(True)
+        else:
+            self.imageAddition.pushButton.setEnabled(False)
 
     def installModules(self):
         print "To be implemented"
@@ -92,15 +110,19 @@ class MainWindow(QtGui.QMainWindow):
         self.caseModel.insertCase(name, description)
         self.central_widget.setCurrentWidget(self.caseManager)
 
-    def addImage(self):
-        #open dialog to select files
-        imageLocation = QtGui.QFileDialog.getOpenFileName()
-        imageName = os.path.basename(str(imageLocation))
+    def imageAdding(self):
+        self.central_widget.setCurrentWidget(self.imageAddition)
 
-        print "imageLocation should be kept in BD"
-        item = QtGui.QStandardItem()
-        item.setText(imageName)
-        self.imageModel.appendRow(item)
+    def searchImage(self):
+        imageLocation = QtGui.QFileDialog.getOpenFileName()
+        self.imageAddition.lineEdit_3.setText(imageLocation)
+
+    def addImage(self):
+        timestamp = self.imageAddition.dateTimeEdit.dateTime().toPyDateTime()
+        print timestamp
+        self.imageModel.insertImage(str(self.imageAddition.lineEdit_3.text()), self.current_case,
+            self.imageAddition.lineEdit.text(), timestamp)
+        self.central_widget.setCurrentWidget(self.imageManager)
 
     def analyse(self):
         #open dialog to select files
@@ -111,31 +133,25 @@ class MainWindow(QtGui.QMainWindow):
         caseIndex = self.caseManager.listView.selectedIndexes()
         self.caseModel.deleteCase(caseIndex[0].row(), caseIndex[0].data().toString())
 
-        print "delete all case-related data from Database"
-
     def deleteImage(self):
         #Get row index of selected image
-        caseIndex = self.imageManager.listView.selectedIndexes()
-        #caseIndex list has only one elem
-        for i in caseIndex:
-            print i.data().toString()
-            self.imageModel.takeRow(i.row())
-
-        #Select image, enable delete button and remove images
-        print "delete image related data from DB"
+        imageIndex = self.imageManager.listView.selectedIndexes()
+        self.imageModel.deleteImage(imageIndex[0].row(), imageIndex[0].data().toString(), self.current_case)
 
     def caseManager(self):
         self.central_widget.setCurrentWidget(self.caseManager)
 
     def cancelCaseManager(self):
+        self.current_case = "none"
         self.central_widget.setCurrentWidget(self.home)
 
     def cancelImageManager(self):
         self.central_widget.setCurrentWidget(self.caseManager)
 
     def manageImages(self):
-        #open case relative to previous choice
-        #populate imageList
+        caseIndex = self.caseManager.listView.selectedIndexes()
+        self.current_case = caseIndex[0].data().toString()
+        self.imageModel.populate(self.current_case)
         self.central_widget.setCurrentWidget(self.imageManager)
 
 
@@ -143,17 +159,19 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow, self).__init__()
 
         try:
-            self.dbCon = lite.connect(dbName)   
-            
+            self.dbCon = lite.connect(dbName)
+
         except lite.Error, e:
             print 'send error to uiController'
 
+        self.current_case = "none"
         self.central_widget = QtGui.QStackedWidget()
         self.setCentralWidget(self.central_widget)
 
         self.home = self.setHomepage()
         self.createCase = self.setCreateCase()
         self.imageManager = self.setImageManager()
+        self.imageAddition = self.setAddImage()
         self.caseManager = self.setCaseManager()
 
 
@@ -161,6 +179,7 @@ class MainWindow(QtGui.QMainWindow):
         self.central_widget.addWidget(self.createCase)
         self.central_widget.addWidget(self.caseManager)
         self.central_widget.addWidget(self.imageManager)
+        self.central_widget.addWidget(self.imageAddition)
 
 
         self.central_widget.setCurrentWidget(self.home)

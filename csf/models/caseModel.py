@@ -30,6 +30,7 @@ class CaseModel(QtGui.QStandardItemModel):
 		self.appendRow(item)
 
 	def deleteCase(self, row, name):
+		#TODO Delete case-related data from the database
 		cur = self.dbCon.cursor()
 		cur.execute("DELETE FROM FCASE WHERE NAME=?", (str(name),))
 		self.dbCon.commit()
