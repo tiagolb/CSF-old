@@ -1,10 +1,15 @@
 import sys, os
 from PyQt4 import QtGui
+import sqlite3 as lite
 
 from views.home import Ui_HomePage
 from views.createCase import Ui_CreateCase
 from views.caseManager import Ui_CaseManager
 from views.imageManager import Ui_ImageManager
+
+from models.caseModel import CaseModel
+
+dbName = 'test.db'
 
 class MainWindow(QtGui.QMainWindow):
     ######################################
@@ -38,15 +43,8 @@ class MainWindow(QtGui.QMainWindow):
         self.caseManager.pushButton.setEnabled(False)
         self.caseManager.pushButton_3.setEnabled(False)
 
-
-        item = QtGui.QStandardItem()
-        item.setText('Item text')
-        item2 = QtGui.QStandardItem()
-        item2.setText('Item text')
-
-        self.caseModel = QtGui.QStandardItemModel(self.caseManager.listView)
-        self.caseModel.appendRow(item)
-        self.caseModel.appendRow(item2)
+        self.caseModel = CaseModel(self.caseManager.listView, self.dbCon)
+        self.caseModel.populate()
         self.caseManager.listView.setModel(self.caseModel)
         return self.caseManager
 
@@ -89,6 +87,9 @@ class MainWindow(QtGui.QMainWindow):
 
     def addCase(self):
         #update available cases shown in list
+        name = self.createCase.lineEdit.text()
+        description = self.createCase.lineEdit_2.text()
+        self.caseModel.insertCase(name, description)
         self.central_widget.setCurrentWidget(self.caseManager)
 
     def addImage(self):
@@ -108,9 +109,7 @@ class MainWindow(QtGui.QMainWindow):
     def deleteCase(self):
         #Get row index of selected case
         caseIndex = self.caseManager.listView.selectedIndexes()
-        for i in caseIndex:
-            print i.data().toString()
-            self.caseModel.takeRow(i.row())
+        self.caseModel.deleteCase(caseIndex[0].row(), caseIndex[0].data().toString())
 
         print "delete all case-related data from Database"
 
@@ -142,6 +141,12 @@ class MainWindow(QtGui.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+
+        try:
+            self.dbCon = lite.connect(dbName)   
+            
+        except lite.Error, e:
+            print 'send error to uiController'
 
         self.central_widget = QtGui.QStackedWidget()
         self.setCentralWidget(self.central_widget)
