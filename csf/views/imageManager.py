@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'imageManager.ui'
+# Form implementation generated from reading ui file 'views/imageManager.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -33,14 +33,14 @@ class Ui_ImageManager(QtGui.QWidget):
         self.pushButton.setGeometry(QtCore.QRect(20, 510, 160, 40))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.scrollArea = QtGui.QScrollArea(ImageManager)
-        self.scrollArea.setGeometry(QtCore.QRect(120, 120, 561, 241))
+        self.scrollArea.setGeometry(QtCore.QRect(120, 120, 561, 171))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName(_fromUtf8("scrollArea"))
         self.scrollAreaWidgetContents = QtGui.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 559, 239))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 559, 169))
         self.scrollAreaWidgetContents.setObjectName(_fromUtf8("scrollAreaWidgetContents"))
         self.listView = QtGui.QListView(self.scrollAreaWidgetContents)
-        self.listView.setGeometry(QtCore.QRect(0, 0, 561, 241))
+        self.listView.setGeometry(QtCore.QRect(0, 0, 561, 171))
         self.listView.setObjectName(_fromUtf8("listView"))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.label = QtGui.QLabel(ImageManager)
@@ -52,6 +52,24 @@ class Ui_ImageManager(QtGui.QWidget):
         self.pushButton_4 = QtGui.QPushButton(ImageManager)
         self.pushButton_4.setGeometry(QtCore.QRect(620, 510, 160, 40))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
+        self.lineEdit = QtGui.QLineEdit(ImageManager)
+        self.lineEdit.setGeometry(QtCore.QRect(120, 330, 561, 29))
+        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        self.lineEdit_2 = QtGui.QLineEdit(ImageManager)
+        self.lineEdit_2.setGeometry(QtCore.QRect(120, 390, 561, 29))
+        self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
+        self.lineEdit_3 = QtGui.QLineEdit(ImageManager)
+        self.lineEdit_3.setGeometry(QtCore.QRect(120, 450, 561, 29))
+        self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
+        self.label_2 = QtGui.QLabel(ImageManager)
+        self.label_2.setGeometry(QtCore.QRect(130, 310, 131, 17))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.label_3 = QtGui.QLabel(ImageManager)
+        self.label_3.setGeometry(QtCore.QRect(130, 370, 131, 17))
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.label_4 = QtGui.QLabel(ImageManager)
+        self.label_4.setGeometry(QtCore.QRect(130, 430, 131, 17))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
 
         self.retranslateUi(ImageManager)
         QtCore.QMetaObject.connectSlotsByName(ImageManager)
@@ -63,3 +81,6 @@ class Ui_ImageManager(QtGui.QWidget):
         self.label.setText(_translate("ImageManager", "Memory Images", None))
         self.pushButton_3.setText(_translate("ImageManager", "Delete Image", None))
         self.pushButton_4.setText(_translate("ImageManager", "Back", None))
+        self.label_2.setText(_translate("ImageManager", "Image MD5 Hash", None))
+        self.label_3.setText(_translate("ImageManager", "Description", None))
+        self.label_4.setText(_translate("ImageManager", "Acquisition Date", None))

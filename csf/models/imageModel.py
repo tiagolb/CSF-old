@@ -46,3 +46,11 @@ class ImageModel(QtGui.QStandardItemModel):
 		self.dbCon.commit()
 
 		self.takeRow(row)
+
+
+	def fetchImageInfo(self, location, case_name):
+		cur = self.dbCon.cursor()
+		cur.execute("SELECT DUMP_HASH, DESCRIPTION, AQUISITION_DATE FROM IMAGE WHERE DUMP_LOCATION = ? AND CASE_NAME = ?", (str(location),str(case_name)))
+		rows = cur.fetchall()
+		self.dbCon.commit()
+		return rows[0][0], rows[0][1], rows[0][2]

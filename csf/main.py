@@ -42,13 +42,14 @@ class MainWindow(QtGui.QMainWindow):
         self.caseManager.pushButton.clicked.connect(self.manageImages)
         self.caseManager.pushButton_2.clicked.connect(self.cancelCaseManager)
         self.caseManager.pushButton_3.clicked.connect(self.deleteCase)
-        self.caseManager.listView.clicked.connect(self.caseSelected)
+        self.caseManager.lineEdit.setReadOnly(True)
         self.caseManager.pushButton.setEnabled(False)
         self.caseManager.pushButton_3.setEnabled(False)
 
         self.caseModel = CaseModel(self.caseManager.listView, self.dbCon)
         self.caseModel.populate()
         self.caseManager.listView.setModel(self.caseModel)
+        self.caseManager.listView.selectionModel().selectionChanged.connect(self.caseSelected)
         return self.caseManager
 
     def setImageManager(self):
@@ -60,9 +61,13 @@ class MainWindow(QtGui.QMainWindow):
         self.imageManager.pushButton_3.clicked.connect(self.deleteImage)
         self.imageManager.pushButton_2.clicked.connect(self.analyse)
         self.imageManager.pushButton_4.clicked.connect(self.cancelImageManager)
+        self.imageManager.lineEdit.setReadOnly(True)
+        self.imageManager.lineEdit_2.setReadOnly(True)
+        self.imageManager.lineEdit_3.setReadOnly(True)
 
         self.imageModel = ImageModel(self.imageManager.listView, self.dbCon)
         self.imageManager.listView.setModel(self.imageModel)
+        self.imageManager.listView.selectionModel().selectionChanged.connect(self.imageSelected)
         return self.imageManager
 
     def setAddImage(self):
@@ -85,9 +90,17 @@ class MainWindow(QtGui.QMainWindow):
     def caseSelected(self):
         self.caseManager.pushButton.setEnabled(True)
         self.caseManager.pushButton_3.setEnabled(True)
+        caseIndex = self.caseManager.listView.selectedIndexes()
+        description = self.caseModel.fetchCaseDescription(caseIndex[0].data().toString())
+        self.caseManager.lineEdit.setText(description)
 
     def imageSelected(self):
         self.imageManager.pushButton_3.setEnabled(True)
+        imageIndex = self.imageManager.listView.selectedIndexes()
+        fileHash, description, date = self.imageModel.fetchImageInfo(imageIndex[0].data().toString(), self.current_case)
+        self.imageManager.lineEdit.setText(fileHash)
+        self.imageManager.lineEdit_2.setText(description)
+        self.imageManager.lineEdit_3.setText(date)
 
     def caseInfoChanged(self):
         if(len(self.createCase.lineEdit.text()) !=0 and len(self.createCase.lineEdit_2.text()) != 0):
@@ -178,6 +191,9 @@ class MainWindow(QtGui.QMainWindow):
 
     def cancelImageManager(self):
         self.central_widget.setCurrentWidget(self.caseManager)
+        self.imageManager.lineEdit.clear()
+        self.imageManager.lineEdit_2.clear()
+        self.imageManager.lineEdit_3.clear()
 
     def manageImages(self):
         caseIndex = self.caseManager.listView.selectedIndexes()

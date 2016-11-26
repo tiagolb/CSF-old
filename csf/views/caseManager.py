@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'caseManager.ui'
+# Form implementation generated from reading ui file 'views/caseManager.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -49,6 +49,12 @@ class Ui_CaseManager(QtGui.QWidget):
         self.pushButton_3 = QtGui.QPushButton(CaseManager)
         self.pushButton_3.setGeometry(QtCore.QRect(320, 510, 160, 40))
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self.label_2 = QtGui.QLabel(CaseManager)
+        self.label_2.setGeometry(QtCore.QRect(130, 380, 121, 17))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.lineEdit = QtGui.QLineEdit(CaseManager)
+        self.lineEdit.setGeometry(QtCore.QRect(120, 410, 561, 29))
+        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
 
         self.retranslateUi(CaseManager)
         QtCore.QMetaObject.connectSlotsByName(CaseManager)
@@ -59,3 +65,4 @@ class Ui_CaseManager(QtGui.QWidget):
         self.pushButton.setText(_translate("CaseManager", "Open Case", None))
         self.label.setText(_translate("CaseManager", "Cases", None))
         self.pushButton_3.setText(_translate("CaseManager", "Delete Case", None))
+        self.label_2.setText(_translate("CaseManager", "Case Description", None))

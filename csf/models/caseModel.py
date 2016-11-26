@@ -36,3 +36,10 @@ class CaseModel(QtGui.QStandardItemModel):
 		self.dbCon.commit()
 
 		self.takeRow(row)
+
+	def fetchCaseDescription(self, name):
+		cur = self.dbCon.cursor()
+		cur.execute("SELECT DESCRIPTION FROM FCASE WHERE NAME = ?", (str(name),))
+		rows = cur.fetchall()
+		self.dbCon.commit()
+		return rows[0][0]
