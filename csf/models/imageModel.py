@@ -29,8 +29,8 @@ class ImageModel(QtGui.QStandardItemModel):
 	def insertImage(self, location, case_name, description, date):
 		dump_hash = self.md5Hash(location)
 		cur = self.dbCon.cursor()
-		cur.execute("INSERT INTO IMAGE(DUMP_HASH, CASE_NAME, DESCRIPTION, AQUISITION_DATE, \
-			DUMP_LOCATION) VALUES (?, ?, ?, ?, ?)", (dump_hash, str(case_name), str(description), date, str(location)))
+		cur.execute("INSERT INTO IMAGE(DUMP_HASH, CASE_NAME, DESCRIPTION, AQUISITION_DATE, DUMP_LOCATION) VALUES (?, ?, ?, ?, ?)",
+			(dump_hash, str(case_name), str(description), date, str(location)))
 		self.dbCon.commit()
 
 		item = QtGui.QStandardItem()
