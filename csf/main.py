@@ -11,6 +11,7 @@ from views.addImage import Ui_AddImage
 
 from models.caseModel import CaseModel
 from models.imageModel import ImageModel
+from models.moduleModel import ModuleModel
 
 dbName = 'ramas.db'
 
@@ -68,6 +69,12 @@ class MainWindow(QtGui.QMainWindow):
         self.imageModel = ImageModel(self.imageManager.listView, self.dbCon)
         self.imageManager.listView.setModel(self.imageModel)
         self.imageManager.listView.selectionModel().selectionChanged.connect(self.imageSelected)
+
+        self.moduleModel = ModuleModel(self.imageManager.listView_2, self.dbCon)
+        self.moduleModel.populate()
+        self.imageManager.listView_2.setModel(self.moduleModel)
+        self.imageManager.listView_2.selectionModel().selectionChanged.connect(self.moduleSelected)
+
         return self.imageManager
 
     def setAddImage(self):
@@ -101,6 +108,12 @@ class MainWindow(QtGui.QMainWindow):
         self.imageManager.lineEdit.setText(fileHash)
         self.imageManager.lineEdit_2.setText(description)
         self.imageManager.lineEdit_3.setText(date)
+
+        self.imageModel.populateModules(imageIndex[0].data().toString(), self.current_case)
+
+    def moduleSelected(self):
+        pass
+
 
     def caseInfoChanged(self):
         if(len(self.createCase.lineEdit.text()) !=0 and len(self.createCase.lineEdit_2.text()) != 0):

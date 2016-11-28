@@ -13,14 +13,15 @@ class ModuleModel(QtGui.QStandardItemModel):
 		for row in rows:
 			item = QtGui.QStandardItem()
 			item.setEditable(False)
+			item.setSelectable(False)
+			item.setCheckable(True)
 			item.setText(row[0])
 			self.appendRow(item)
 		self.dbCon.commit()
 
 	def insertModule(self, name):
 		cur = self.dbCon.cursor()
-		cur.execute("INSERT INTO MODULE(NAME) VALUES (?)",
-			(str(name),)
+		cur.execute("INSERT INTO MODULE(NAME) VALUES (?)",(str(name),))
 		self.dbCon.commit()
 
 		item = QtGui.QStandardItem()

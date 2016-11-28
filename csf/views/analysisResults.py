@@ -22,7 +22,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_AnalysisResults(object):
+class Ui_AnalysisResults(QtGui.QWidget):
     def setupUi(self, AnalysisResults):
         AnalysisResults.setObjectName(_fromUtf8("AnalysisResults"))
         AnalysisResults.resize(800, 600)
@@ -67,4 +67,3 @@ class Ui_AnalysisResults(object):
         self.label_2.setText(_translate("AnalysisResults", "Analysis Status:", None))
         self.label_3.setText(_translate("AnalysisResults", "Done.", None))
         self.pushButton_4.setText(_translate("AnalysisResults", "Back", None))
-

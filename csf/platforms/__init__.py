@@ -37,7 +37,7 @@ except:
 
 import twitter
 import facebook
-import facebookThreads
+import facebookThreadsNew
 import roundcube
 import roundcubeOutbox
 import pidgin

@@ -44,7 +44,7 @@
     <rect>
      <x>120</x>
      <y>120</y>
-     <width>561</width>
+     <width>391</width>
      <height>171</height>
     </rect>
    </property>
@@ -56,7 +56,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>559</width>
+      <width>389</width>
       <height>169</height>
      </rect>
     </property>
@@ -65,7 +65,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>561</width>
+       <width>391</width>
        <height>171</height>
       </rect>
      </property>
@@ -179,6 +179,52 @@
    <property name="text">
     <string>Acquisition Date</string>
    </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>90</y>
+     <width>121</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Modules</string>
+   </property>
+  </widget>
+  <widget class="QScrollArea" name="scrollArea_2">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>120</y>
+     <width>231</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>229</width>
+      <height>169</height>
+     </rect>
+    </property>
+    <widget class="QListView" name="listView_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>231</width>
+       <height>171</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <resources/>
