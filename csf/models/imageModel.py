@@ -54,3 +54,9 @@ class ImageModel(QtGui.QStandardItemModel):
 		rows = cur.fetchall()
 		self.dbCon.commit()
 		return rows[0][0], rows[0][1], rows[0][2]
+
+	def wasImageAnalysed(self, imageHash):
+		cur = self.dbCon.cursor()
+		cur.execute("SELECT * FROM MESSAGE WHERE DUMP_HASH=?", (str(imageHash),))
+		rows = cur.fetchall()
+		return len(rows) > 0
