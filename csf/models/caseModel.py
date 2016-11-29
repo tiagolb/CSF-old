@@ -30,9 +30,11 @@ class CaseModel(QtGui.QStandardItemModel):
 		self.appendRow(item)
 
 	def deleteCase(self, row, name):
-		#TODO Delete case-related data from the database
 		cur = self.dbCon.cursor()
 		cur.execute("DELETE FROM FCASE WHERE NAME=?", (str(name),))
+		cur.execute("DELETE FROM IMAGE WHERE CASE_NAME=?", (str(case_name),))
+		cur.execute("DELETE FROM MESSAGE WHERE CASE_NAME=?", (str(case_name),))
+		#TODO Delete person
 		self.dbCon.commit()
 
 		self.takeRow(row)

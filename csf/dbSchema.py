@@ -11,11 +11,9 @@ def initDatabase(dbCon):
     rows_module = cur.fetchall()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'")
     rows_person = cur.fetchall()
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='MESSAGE'")
-    rows_message = cur.fetchall()
 
     if(len(rows_fcase) == 0 and len(rows_image) == 0 and len(rows_module) == 0 and
-    len(rows_person) == 0 and len(rows_message) == 0):
+    len(rows_person) == 0):
         cur.execute("PRAGMA foreign_keys = ON")
 
         cur.execute("CREATE TABLE FCASE(\
@@ -34,6 +32,7 @@ def initDatabase(dbCon):
 
         cur.execute("CREATE TABLE MODULE(\
            NAME  TEXT  NOT NULL,\
+           DESCRIPTION  TEXT  NOT NULL,\
            PRIMARY KEY (NAME))")
 
         cur.execute("CREATE TABLE PERSON(\
@@ -43,22 +42,22 @@ def initDatabase(dbCon):
            FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME),\
            PRIMARY KEY (NAME))")
 
-        cur.execute("CREATE TABLE MESSAGE(\
-         ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\
-         DUMP_HASH         BINARY(32)  NOT NULL,\
-         CASE_NAME         TEXT        NOT NULL,\
-         MODULE            TEXT        NOT NULL,\
-         SENDER            TEXT        NOT NULL,\
-         RECEIVER          TEXT        NOT NULL,\
-         CONTENT           TEXT        NOT NULL,\
-         MESSAGE_TIMESTAMP DATE        NOT NULL,\
-         FOREIGN KEY (DUMP_HASH)       REFERENCES IMAGE(DUMP_HASH),\
-         FOREIGN KEY (CASE_NAME)       REFERENCES FCASE(NAME),\
-         FOREIGN KEY (MODULE)          REFERENCES MODULE(NAME),\
-         FOREIGN KEY (SENDER)          REFERENCES PERSON(NAME),\
-         FOREIGN KEY (RECEIVER)        REFERENCES PERSON(NAME))")
+        #cur.execute("CREATE TABLE MESSAGE(\
+        # ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\
+        # DUMP_HASH         BINARY(32)  NOT NULL,\
+        # CASE_NAME         TEXT        NOT NULL,\
+        # MODULE            TEXT        NOT NULL,\
+        # SENDER            TEXT        NOT NULL,\
+        # RECEIVER          TEXT        NOT NULL,\
+        # CONTENT           TEXT        NOT NULL,\
+        # MESSAGE_TIMESTAMP DATE        NOT NULL,\
+        # FOREIGN KEY (DUMP_HASH)       REFERENCES IMAGE(DUMP_HASH),\
+        # FOREIGN KEY (CASE_NAME)       REFERENCES FCASE(NAME),\
+        # FOREIGN KEY (MODULE)          REFERENCES MODULE(NAME),\
+        # FOREIGN KEY (SENDER)          REFERENCES PERSON(NAME),\
+        # FOREIGN KEY (RECEIVER)        REFERENCES PERSON(NAME))")
     elif(len(rows_fcase) == 1 and len(rows_image) == 1 and len(rows_module) == 1 and
-    len(rows_person) == 1 and len(rows_message) == 1):
+    len(rows_person) == 1):
         pass #Database has our tables
     else:
         raise Exception('Input Database has some tables used by Ramas. Possible Conflict. Aborting...')

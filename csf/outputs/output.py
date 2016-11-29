@@ -33,9 +33,9 @@ import os
 from html_assets import *
 import urllib
 import datetime
+import HTML
 
 AUDIT_DIR = "audit_result"
-AUDIT_HTML = AUDIT_DIR + "/audit.html"
 
 # convert timestamps to user friendly time strings
 def time_convert(time_long):
@@ -47,16 +47,14 @@ def time_convert(time_long):
 def urldecode(string):
     return urllib.unquote(string)
 
-# Based on the template design pattern
-class OutputFactory(object):
-    targets = []
-
+class Output():
     def __build_html_header(self):
-        head = header.header_html(self.title, self.targets)
+        head = header.header_html(self.module, self.modules)
         return head
 
     def __build_index_header(self, newTitle):
-        head = header.header_html(newTitle, self.targets)
+        head = header.header_html(newTitle, self.modules)
+        print self.modules
         return head
 
     def __build_html_footer(self):
@@ -85,7 +83,7 @@ class OutputFactory(object):
               <div class="col-md-2"></div>
             </div>
         """
-        file_handler = open(AUDIT_HTML, "w")
+        file_handler = open(AUDIT_DIR + "/" + self.fileHash + "/audit.html" , "w")
         file_handler.write(header_code)
         file_handler.write(html_code)
         file_handler.write(footer_code)
@@ -94,42 +92,36 @@ class OutputFactory(object):
     def __create_directories(self):
         if not os.path.exists(AUDIT_DIR):
             os.makedirs(AUDIT_DIR)
-        if not os.path.exists(AUDIT_HTML) and self.html:
+        if not os.path.exists(AUDIT_DIR + "/" + self.fileHash):
+            os.makedirs(AUDIT_DIR + "/" + self.fileHash)
             self.__build_index()
 
-    def setup(self, title, targets, html, verbose):
-        self.targets = targets
-        self.title = title
-        self.html = html
-        self.verbose = verbose
-
-        if html:
-            self.html_filename = "/"+title+".html"
-
-        self.text_filename = "/"+title+".txt"
+    def setup(self, fileHash, module, modules):
+        self.fileHash = fileHash
+        self.modules = modules
+        self.module = module
+        self.html_filename = "/" + fileHash + "/" + module + ".html"
         self.__create_directories()
 
-    def text_code(self): pass # to be implemented by subclasses
-    def html_code(self): pass # to be implemented by subclasses
+    def html_code(self, input_list, fields):
+        t = HTML.Table(
+                header_row=fields,
+                classes="table table-striped"
+            )
+        for message in input_list:
+            t.rows.append(message)
+        return str(t)
 
-    def out(self, input_list):
+    def out(self, input_list, recordFields):
 
-        # if the html flag is active
-        if self.html:
-            # generate header and footer html code
-            header_code = self.__build_html_header()
-            footer_code = self.__build_html_footer()
+        # generate header and footer html code
+        header_code = self.__build_html_header()
+        footer_code = self.__build_html_footer()
 
-            # create html file for this target
-            file_handler = open(AUDIT_DIR + self.html_filename, "w")
-            file_handler.write(header_code) # write header code
-            file_handler.write("<h1>"+ self.title +"</h1>")
-            file_handler.write(self.html_code(input_list)) # write results
-            file_handler.write(footer_code) # write footer code
-            file_handler.close() # close file
-
-        # create text file for this target
-        file_handler = open(AUDIT_DIR + self.text_filename, "w")
-        file_handler.write("***** "+ self.title +" *****")
-        file_handler.write(self.text_code(input_list)) # write results
+        # create html file for this target
+        file_handler = open(AUDIT_DIR + self.html_filename, "w")
+        file_handler.write(header_code) # write header code
+        file_handler.write("<h1>"+ self.module +"</h1>")
+        file_handler.write(self.html_code(input_list, recordFields)) # write results
+        file_handler.write(footer_code) # write footer code
         file_handler.close() # close file

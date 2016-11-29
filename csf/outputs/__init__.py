@@ -35,9 +35,8 @@ try:
 except:
     __version__ = 'unknown'
 
-from output import OutputFactory
+from output import Output
 from output import AUDIT_DIR
 from output import time_convert
 from output import urldecode
 import HTML
-

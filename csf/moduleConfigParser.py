@@ -7,8 +7,9 @@ def readConfig(configFile):
     Config.read(configFile)
 
     config_sections = Config.sections()
-    if(len(config_sections) == 3):
-        if('StartDelimiter' in config_sections and 'EndDelimiter' in config_sections and 'PreProcess' in config_sections):
+    if(len(config_sections) == 4):
+        if('StartDelimiter' in config_sections and 'EndDelimiter' in config_sections and
+            'PreProcess' in config_sections and 'Info' in config_sections):
             start_options = Config.options('StartDelimiter')
             end_options = Config.options('EndDelimiter')
             if('record' in start_options and 'record' in end_options):
@@ -34,4 +35,27 @@ def readConfig(configFile):
         else:
             print 'Malformed sections: Provide Start/End Delimiters and PreProcess'
     else:
-        print 'Malformed sections: Other than two'
+        print 'Malformed sections: Other than three'
+
+def readModuleInfo(configFile):
+    Config = ConfigParser.ConfigParser()
+    Config.read(configFile)
+
+    name = Config.get('Info','name')
+    desc = Config.get('Info','description')
+    return name, desc
+
+def readRecordFields(configFile):
+    Config = ConfigParser.ConfigParser()
+    Config.read(configFile)
+    return Config.options('StartDelimiter')[1:]
+
+def readPreProcessorConfig(configFile):
+    Config = ConfigParser.ConfigParser()
+    Config.read(configFile)
+
+    config_sections = Config.sections()
+    if('PreProcess' in config_sections):
+        preProcess_options = Config.options('PreProcess')
+        if(len(preProcess_options) == 1 and 'keyword' in preProcess_options):
+            return Config.get('PreProcess','keyword')

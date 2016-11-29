@@ -40,11 +40,11 @@ class ImageModel(QtGui.QStandardItemModel):
 		self.appendRow(item)
 
 	def deleteImage(self, row, location, case_name):
-		#TODO Delete image-related data from the database
 		cur = self.dbCon.cursor()
 		cur.execute("DELETE FROM IMAGE WHERE DUMP_LOCATION=? AND CASE_NAME=?", (str(location), str(case_name)))
+		cur.execute("DELETE FROM MESSAGE WHERE DUMP_HASH=? AND CASE_NAME=?", (str(self.md5Hash(location)), str(case_name)))
+		#TODO remove person
 		self.dbCon.commit()
-
 		self.takeRow(row)
 
 
@@ -57,6 +57,17 @@ class ImageModel(QtGui.QStandardItemModel):
 
 	def wasImageAnalysed(self, imageHash):
 		cur = self.dbCon.cursor()
-		cur.execute("SELECT * FROM MESSAGE WHERE DUMP_HASH=?", (str(imageHash),))
+		cur.execute("SELECT NAME FROM MODULE")
 		rows = cur.fetchall()
-		return len(rows) > 0
+		all_modules = []
+		for row in rows:
+			all_modules.append(row[0])
+
+		for module in all_modules:
+			cur.execute("SELECT * FROM " + module + "_MSG WHERE DUMP_HASH=?", (str(imageHash),))
+			rows = cur.fetchall()
+		 	if(len(rows) > 0):
+				return True
+			else:
+				continue
+		return False
