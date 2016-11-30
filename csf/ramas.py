@@ -273,7 +273,7 @@ class MainWindow(QtGui.QMainWindow):
 
         if(len(modulesToApply) > 0):
             analyzer = Analyzer()
-            analyzer.setup(modulesToApply, imageLocation, fileHash)
+            analyzer.setup(modulesToApply, imageLocation, fileHash, self.current_case)
             analyzer.analysisLoop()
 
             #Refresh analysed modules and enable result view

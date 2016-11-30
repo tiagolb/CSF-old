@@ -35,19 +35,55 @@ import shutil, os, sys
 import tempfile
 import threading
 import re
+import sqlite3 as lite
+
+from models.messageModel import MessageModel
 from subprocess import Popen, PIPE
 from moduleConfigParser import readConfig
 from moduleConfigParser import readRecordFields
 from moduleConfigParser import readPreProcessorConfig
 
+dbName = 'ramas.db'
 class Analyzer():
+    def __insertMessage(self, records, recordFields, module):
+        try:
+            dbCon = lite.connect(dbName)
+        except lite.Error, e:
+            print "Error connecting to Database"
+            #TODO Signal error up to the Interface
+
+        cur = dbCon.cursor()
+
+        #Build query for inserting records in the respective module table
+        for record in records:
+            query = "INSERT INTO " + module + "_MSG (DUMP_HASH, CASE_NAME,"
+            for n,field in enumerate(recordFields):
+                if(n < len(recordFields)-1):
+                    query += field + ", "
+                else:
+                    query += field + ") VALUES ("
+                    for i in range(0,len(recordFields)):
+                        if(i < len(recordFields)-1):
+                            query += "?, "
+                        else:
+                            query += "?,?,?)"
+
+        #Add current image + current case to the record fields
+        base = (str(self.fileHash),str(self.currentCase))
+        for record in records:
+            values = base + record
+            cur.execute(query, values)
+
+        dbCon.commit()
+
+
     def __get_module_records(self,input_file_handler, module):
         strings_joined  = '\n'.join(input_file_handler.readlines())
 
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
         delimiters = readConfig("platforms/" + module + ".cfg")
-        
+
         # Gather relevant blocks containing messages
         begin = re.escape(delimiters[0][1]) + r'(.+?)' + re.escape(delimiters[0][2])
 
@@ -101,13 +137,15 @@ class Analyzer():
         output_gen = Output()
         output_gen.setup(self.fileHash, module, self.modules)
         recordFields = readRecordFields("platforms/" + module + ".cfg")
+
+        self.__insertMessage(records, recordFields, module)
         output_gen.out(records, recordFields)
 
-        #TODO DB operations
-    def setup(self,modules, filename, fileHash):
+    def setup(self,modules, filename, fileHash, currentCase):
         self.filename = filename
         self.fileHash = fileHash
         self.modules = modules
+        self.currentCase = currentCase
 
     def analysisLoop(self):
             threads = []
