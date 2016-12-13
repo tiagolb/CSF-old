@@ -36,6 +36,7 @@ import tempfile
 import threading
 import re
 import sqlite3 as lite
+import random
 
 from models.messageModel import MessageModel
 from subprocess import Popen, PIPE
@@ -45,6 +46,10 @@ from moduleConfigParser import readPreProcessorConfig
 
 dbName = 'ramas.db'
 class Analyzer():
+    def __rreplace(s, old, new, occurrence):
+        li = s.rsplit(old, occurrence)
+        return new.join(li)
+
     def __insertMessage(self, records, recordFields, module):
         try:
             dbCon = lite.connect(dbName)
@@ -91,6 +96,19 @@ class Analyzer():
 
         message_tuples = message_block_regex.findall(processed_input)
 
+        #Change delimiters
+        """
+        random_delim = []
+
+        for t in message_tuples:
+            for opt in delimiters[1:]:
+                nonce = random.randint(0,100000) #generate rand delimiter
+                tag = "RAMAS" + str(nonce)
+                random_delim.append(tag)
+
+                replace(t, opt[1], tag, 1)      #replace start delimiter for field
+                self.__rreplace(t, opt[2], tag, 1) #replace end delimiter for field
+                """
         fields = []
         for opt in delimiters[1:]:
             fields.append(re.escape(opt[1]) + r'(.*?)' + re.escape(opt[2]))

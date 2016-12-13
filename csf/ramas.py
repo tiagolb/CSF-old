@@ -262,30 +262,34 @@ class MainWindow(QtGui.QMainWindow):
 
     def analyse(self):
         imageIndex = self.imageManager.listView.selectedIndexes()
-        imageLocation = str(imageIndex[0].data().toString())
-        fileHash, description, date = self.imageModel.fetchImageInfo(imageIndex[0].data().toString(), self.current_case)
-
-        modulesToApply = []
-        for index in range(self.moduleModel.rowCount()):
-            if(self.moduleModel.item(index).isCheckable()):
-                if(self.moduleModel.item(index).checkState()):
-                    modulesToApply.append(str(self.moduleModel.item(index).text()))
-
-        if(len(modulesToApply) > 0):
-            analyzer = Analyzer()
-            analyzer.setup(modulesToApply, imageLocation, fileHash, self.current_case)
-            analyzer.analysisLoop()
-
-            #Refresh analysed modules and enable result view
-            if(self.imageModel.wasImageAnalysed(fileHash)):
-                self.imageManager.pushButton_5.setEnabled(True)
-            else:
-                self.imageManager.pushButton_5.setEnabled(False)
-
-            self.moduleModel.populateUnprocessedModules(fileHash)
-        else:
-            msg = "No module has been selected for analysing the image."
+        if(len(imageIndex) == 0):
+            msg = "No image has been selected for analysis."
             reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
+        else:
+            imageLocation = str(imageIndex[0].data().toString())
+            fileHash, description, date = self.imageModel.fetchImageInfo(imageIndex[0].data().toString(), self.current_case)
+
+            modulesToApply = []
+            for index in range(self.moduleModel.rowCount()):
+                if(self.moduleModel.item(index).isCheckable()):
+                    if(self.moduleModel.item(index).checkState()):
+                        modulesToApply.append(str(self.moduleModel.item(index).text()))
+
+            if(len(modulesToApply) > 0):
+                analyzer = Analyzer()
+                analyzer.setup(modulesToApply, imageLocation, fileHash, self.current_case)
+                analyzer.analysisLoop()
+
+                #Refresh analysed modules and enable result view
+                if(self.imageModel.wasImageAnalysed(fileHash)):
+                    self.imageManager.pushButton_5.setEnabled(True)
+                else:
+                    self.imageManager.pushButton_5.setEnabled(False)
+
+                self.moduleModel.populateUnprocessedModules(fileHash)
+            else:
+                msg = "No module has been selected for analysing the image."
+                reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
 
 
 
