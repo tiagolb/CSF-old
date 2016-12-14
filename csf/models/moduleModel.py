@@ -45,7 +45,9 @@ class ModuleModel(QtGui.QStandardItemModel):
 			if(len(r) > 0):
 				if(module not in processed_modules):
 					processed_modules.append(module)
-					print "added " + module
+
+		for m in processed_modules:
+			print "[processed_modules] " + m
 
 
 		for m in all_modules:
@@ -79,10 +81,6 @@ class ModuleModel(QtGui.QStandardItemModel):
 		cur.execute(query)
 		self.dbCon.commit()
 
-		item = QtGui.QStandardItem()
-		item.setEditable(False)
-		item.setText(name)
-		self.appendRow(item)
 
 	def deleteModule(self, row, name):
 		cur = self.dbCon.cursor()
@@ -90,5 +88,3 @@ class ModuleModel(QtGui.QStandardItemModel):
 		query = "DROP TABLE IF EXISTS " + str(name) + "_MSG"
 		cur.execute(query)
 		self.dbCon.commit()
-
-		self.takeRow(row)

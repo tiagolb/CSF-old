@@ -32,9 +32,17 @@ class CaseModel(QtGui.QStandardItemModel):
 	def deleteCase(self, row, name):
 		cur = self.dbCon.cursor()
 		cur.execute("DELETE FROM FCASE WHERE NAME=?", (str(name),))
-		cur.execute("DELETE FROM IMAGE WHERE CASE_NAME=?", (str(case_name),))
-		cur.execute("DELETE FROM MESSAGE WHERE CASE_NAME=?", (str(case_name),))
-		#TODO Delete person
+		cur.execute("DELETE FROM IMAGE WHERE CASE_NAME=?", (str(name),))
+
+		cur.execute("SELECT NAME FROM MODULE")
+		rows = cur.fetchall()
+		all_modules = []
+		for r in rows:
+			all_modules.append(r[0])
+
+		for module in all_modules:
+			cur.execute("DELETE FROM " + module + "_MSG WHERE CASE_NAME=?", (str(name),))
+
 		self.dbCon.commit()
 
 		self.takeRow(row)

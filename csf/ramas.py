@@ -33,6 +33,8 @@ class MainWindow(QtGui.QMainWindow):
         self.home.pushButton.clicked.connect(self.createCase)
         self.home.pushButton_2.clicked.connect(self.caseManager)
         self.home.pushButton_3.clicked.connect(self.installModules)
+        pixmap = QtGui.QPixmap("./views/logo.jpg")
+        self.home.label.setPixmap(pixmap)
         return self.home
 
     def setCreateCase(self):
@@ -153,8 +155,11 @@ class MainWindow(QtGui.QMainWindow):
             except lite.Error, e:
                 msg = "This module was already added to Ramas."
                 reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
-        #TODO Exceptions for ill-configured config files , correct population of listView_2
+        #TODO Exceptions for ill-configured config files
+        self.moduleModel = ModuleModel(self.moduleManager.listView_2, self.dbCon)
         self.moduleModel.populate()
+        self.moduleManager.listView_2.setModel(self.moduleModel)
+        self.moduleManager.listView_2.selectionModel().selectionChanged.connect(self.moduleSelected)
 
 
     def moduleInfoChanged(self):
@@ -176,6 +181,10 @@ class MainWindow(QtGui.QMainWindow):
 
         if(reply == QtGui.QMessageBox.Yes):
             self.moduleModel.deleteModule(moduleIndex[0].row(), moduleIndex[0].data().toString())
+            self.moduleModel = ModuleModel(self.moduleManager.listView_2, self.dbCon)
+            self.moduleModel.populate()
+            self.moduleManager.listView_2.setModel(self.moduleModel)
+            self.moduleManager.listView_2.selectionModel().selectionChanged.connect(self.moduleSelected)
         else:
             pass
 
@@ -190,6 +199,8 @@ class MainWindow(QtGui.QMainWindow):
         description = self.createCase.lineEdit_2.text()
         try:
             self.caseModel.insertCase(name, description)
+            self.createCase.lineEdit.clear()
+            self.createCase.lineEdit_2.clear()
             self.central_widget.setCurrentWidget(self.caseManager)
         except lite.Error, e:
             msg = "A case named \"" + str(name) + "\" already exists."

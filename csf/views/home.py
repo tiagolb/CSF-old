@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'home.ui'
+# Form implementation generated from reading ui file 'views/home.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -35,10 +35,9 @@ class Ui_HomePage(QtGui.QWidget):
         self.pushButton = QtGui.QPushButton(HomePage)
         self.pushButton.setGeometry(QtCore.QRect(80, 500, 160, 40))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.graphicsView = QtGui.QGraphicsView(HomePage)
-        self.graphicsView.setGeometry(QtCore.QRect(190, 60, 451, 371))
-        self.graphicsView.setInteractive(False)
-        self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
+        self.label = QtGui.QLabel(HomePage)
+        self.label.setGeometry(QtCore.QRect(120, 100, 551, 311))
+        self.label.setObjectName(_fromUtf8("label"))
 
         self.retranslateUi(HomePage)
         QtCore.QMetaObject.connectSlotsByName(HomePage)
@@ -48,3 +47,4 @@ class Ui_HomePage(QtGui.QWidget):
         self.pushButton_2.setText(_translate("HomePage", "Open Case", None))
         self.pushButton_3.setText(_translate("HomePage", "Install Modules", None))
         self.pushButton.setText(_translate("HomePage", "New Case", None))
+        self.label.setText(_translate("HomePage", "TextLabel", None))

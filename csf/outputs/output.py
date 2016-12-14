@@ -94,7 +94,7 @@ class Output():
             os.makedirs(AUDIT_DIR)
         if not os.path.exists(AUDIT_DIR + "/" + self.fileHash):
             os.makedirs(AUDIT_DIR + "/" + self.fileHash)
-            self.__build_index()
+        self.__build_index()
 
     def setup(self, fileHash, module, modules):
         self.fileHash = fileHash

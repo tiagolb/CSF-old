@@ -46,7 +46,7 @@ from moduleConfigParser import readPreProcessorConfig
 
 dbName = 'ramas.db'
 class Analyzer():
-    def __rreplace(s, old, new, occurrence):
+    def __rreplace(self, s, old, new, occurrence):
         li = s.rsplit(old, occurrence)
         return new.join(li)
 
@@ -97,21 +97,30 @@ class Analyzer():
         message_tuples = message_block_regex.findall(processed_input)
 
         #Change delimiters
-        """
-        random_delim = []
+        nonce = random.randint(0,100000) #generate rand delimiter
+        tag = "RAMAS" + str(nonce)
+        random_delim = tag
 
-        for t in message_tuples:
+        print random_delim
+
+
+        for m, t in enumerate(message_tuples):
             for opt in delimiters[1:]:
-                nonce = random.randint(0,100000) #generate rand delimiter
-                tag = "RAMAS" + str(nonce)
-                random_delim.append(tag)
+                if(opt[0] == "content"):
+                    message_tuples[m] = message_tuples[m].replace(opt[1], random_delim, 1)      #replace start delimiter for field
+                    message_tuples[m] = self.__rreplace(message_tuples[m], opt[2], random_delim, 1) #replace end delimiter for field
 
-                replace(t, opt[1], tag, 1)      #replace start delimiter for field
-                self.__rreplace(t, opt[2], tag, 1) #replace end delimiter for field
-                """
+        print "PROVA"
+        print message_tuples[0]
+        print len(message_tuples)
+
+
         fields = []
         for opt in delimiters[1:]:
-            fields.append(re.escape(opt[1]) + r'(.*?)' + re.escape(opt[2]))
+            if(opt[0] != "content"):
+                fields.append(re.escape(opt[1]) + r'(.*?)' + re.escape(opt[2]))
+            else:
+                fields.append(random_delim + r'(.*?)' + random_delim)
 
         # Full regex for a conversation snippet
         thread_regex = re.compile(
@@ -125,7 +134,7 @@ class Analyzer():
             threads = thread_regex.findall(t)
             if len(threads) > 0:
                 results.append(threads[0])
-
+        print results
         return set(results)
 
 
