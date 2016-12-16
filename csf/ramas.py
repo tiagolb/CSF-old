@@ -84,7 +84,7 @@ class MainWindow(QtGui.QMainWindow):
     def setImageManager(self):
         self.imageManager = Ui_ImageManager()
         self.imageManager.setupUi(self.imageManager)
-        self.imageManager.listView.clicked.connect(self.imageSelected)
+        #self.imageManager.listView.clicked.connect(self.imageSelected)
         self.imageManager.pushButton.clicked.connect(self.imageAdding)
         self.imageManager.pushButton_3.setEnabled(False)
         self.imageManager.pushButton_3.clicked.connect(self.deleteImage)
@@ -111,7 +111,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageAddition.setupUi(self.imageAddition)
         self.imageAddition.pushButton.clicked.connect(self.addImage)
         self.imageAddition.pushButton.setEnabled(False)
-        self.imageAddition.pushButton_2.clicked.connect(self.cancelImageManager)
+        self.imageAddition.pushButton_2.clicked.connect(self.cancelImageAdding)
         self.imageAddition.pushButton_3.clicked.connect(self.searchImage)
         self.imageAddition.lineEdit.textChanged.connect(self.imageInfoChanged)
         self.imageAddition.lineEdit_3.textChanged.connect(self.imageInfoChanged)
@@ -227,10 +227,13 @@ class MainWindow(QtGui.QMainWindow):
 
     def caseSelected(self):
         self.caseManager.pushButton.setEnabled(True)
+        self.caseManager.pushButton.setAutoDefault(False)
+        self.caseManager.pushButton.setDefault(True)
         self.caseManager.pushButton_3.setEnabled(True)
         caseIndex = self.caseManager.listView.selectedIndexes()
-        description = self.caseModel.fetchCaseDescription(caseIndex[0].data().toString())
-        self.caseManager.lineEdit.setText(description)
+        if(len(caseIndex) > 0):
+            description = self.caseModel.fetchCaseDescription(caseIndex[0].data().toString())
+            self.caseManager.lineEdit.setText(description)
 
     def deleteCase(self):
         #Get row index of selected case
@@ -240,6 +243,10 @@ class MainWindow(QtGui.QMainWindow):
 
         if(reply == QtGui.QMessageBox.Yes):
             self.caseModel.deleteCase(caseIndex[0].row(), caseIndex[0].data().toString())
+            self.caseManager.lineEdit.clear()
+            if(len(self.caseManager.listView.selectedIndexes()) == 0):
+                self.caseManager.pushButton.setEnabled(False)
+                self.caseManager.pushButton_3.setEnabled(False)
         else:
             pass
 
@@ -251,17 +258,31 @@ class MainWindow(QtGui.QMainWindow):
         self.imageManager.pushButton_2.setEnabled(True)
         self.imageManager.pushButton_3.setEnabled(True)
         imageIndex = self.imageManager.listView.selectedIndexes()
-        fileHash, description, date = self.imageModel.fetchImageInfo(imageIndex[0].data().toString(), self.current_case)
-        self.imageManager.lineEdit.setText(fileHash)
-        self.imageManager.lineEdit_2.setText(description)
-        self.imageManager.lineEdit_3.setText(date)
+        if(len(imageIndex) > 0):
+            fileHash, description, date = self.imageModel.fetchImageInfo(imageIndex[0].data().toString(), self.current_case)
+            if(not self.imageModel.verifyHash(imageIndex[0].data().toString())):
+                msg = "Image has changed on disk. Please restore image file."
+                reply = QtGui.QMessageBox.warning(self, 'Message', msg, QtGui.QMessageBox.Ok)
+                self.imageManager.lineEdit.clear()
+                self.imageManager.lineEdit_2.clear()
+                self.imageManager.lineEdit_3.clear()
+                self.imageManager.pushButton_5.setEnabled(False)
+                self.imageManager.pushButton_2.setEnabled(False)
+                self.moduleModel = ModuleModel(self.imageManager.listView_2, self.dbCon)
+                self.moduleModel.populate()
+                self.imageManager.listView_2.setModel(self.moduleModel)
 
-        if(self.imageModel.wasImageAnalysed(fileHash)):
-            self.imageManager.pushButton_5.setEnabled(True)
-        else:
-            self.imageManager.pushButton_5.setEnabled(False)
+            else:
+                self.imageManager.lineEdit.setText(fileHash)
+                self.imageManager.lineEdit_2.setText(description)
+                self.imageManager.lineEdit_3.setText(date)
 
-        self.moduleModel.populateUnprocessedModules(fileHash)
+                if(self.imageModel.wasImageAnalysed(fileHash)):
+                    self.imageManager.pushButton_5.setEnabled(True)
+                else:
+                    self.imageManager.pushButton_5.setEnabled(False)
+
+                self.moduleModel.populateUnprocessedModules(fileHash)
 
 
     def checkResults(self):
@@ -320,6 +341,9 @@ class MainWindow(QtGui.QMainWindow):
         self.imageManager.lineEdit.clear()
         self.imageManager.lineEdit_2.clear()
         self.imageManager.lineEdit_3.clear()
+        self.imageManager.pushButton_3.setEnabled(False)
+        self.moduleModel.clear()
+        self.moduleModel.populate()
 
     def imageAdding(self):
         self.central_widget.setCurrentWidget(self.imageAddition)
@@ -353,6 +377,8 @@ class MainWindow(QtGui.QMainWindow):
         else:
             self.imageAddition.pushButton.setEnabled(False)
 
+    def cancelImageAdding(self):
+        self.central_widget.setCurrentWidget(self.imageManager)
 
     def __init__(self):
         super(MainWindow, self).__init__()

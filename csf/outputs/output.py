@@ -30,6 +30,7 @@ __email__ = "tiago.de.oliveira.brito@tecnico.ulisboa.pt"
 __status__ = "Production"
 
 import os
+import glob
 from html_assets import *
 import urllib
 import datetime
@@ -53,8 +54,20 @@ class Output():
         return head
 
     def __build_index_header(self, newTitle):
-        head = header.header_html(newTitle, self.modules)
-        print self.modules
+        #Check which analysis results are already in the audit folder.
+        #Reconstruct audit.html index accordingly
+        imgAuditLoc = 'audit_result/' + self.fileHash
+        auditFiles = os.listdir(imgAuditLoc)
+
+        if("audit.html" in auditFiles):
+            auditFiles.remove("audit.html")
+
+        for n, module in enumerate(auditFiles):
+            auditFiles[n] = os.path.splitext(module)[0]
+
+        analysisHyperlinks = self.modules  + auditFiles
+        head = header.header_html(newTitle, analysisHyperlinks)
+
         return head
 
     def __build_html_footer(self):
@@ -114,6 +127,7 @@ class Output():
 
     def out(self, input_list, recordFields):
 
+        #TODO Re-generate module audit header to account for newly analyzed modules
         # generate header and footer html code
         header_code = self.__build_html_header()
         footer_code = self.__build_html_footer()

@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 import hashlib
+import shutil
 
 class ImageModel(QtGui.QStandardItemModel):
 
@@ -47,9 +48,16 @@ class ImageModel(QtGui.QStandardItemModel):
 		cur.execute("SELECT NAME FROM MODULE")
 		rows = cur.fetchall()
 
+		imgHash = self.md5Hash(location)
 		for r in rows:
 			query = "DELETE FROM " + str(r[0]) + "_MSG WHERE DUMP_HASH=? AND CASE_NAME=?"
-			cur.execute(query, (str(self.md5Hash(location)), str(case_name)))
+			cur.execute(query, (str(imgHash), str(case_name)))
+
+		#If is it the last version of the image in use among several cases, delete audit html
+		cur.execute("SELECT DUMP_HASH FROM IMAGE WHERE DUMP_LOCATION=?", (str(location),))
+		rows = cur.fetchall()
+		if(len(rows) == 0):
+			shutil.rmtree('./audit_result/'+ imgHash)
 
 		self.dbCon.commit()
 		self.takeRow(row)
@@ -60,7 +68,19 @@ class ImageModel(QtGui.QStandardItemModel):
 		cur.execute("SELECT DUMP_HASH, DESCRIPTION, AQUISITION_DATE FROM IMAGE WHERE DUMP_LOCATION = ? AND CASE_NAME = ?", (str(location),str(case_name)))
 		rows = cur.fetchall()
 		self.dbCon.commit()
+
 		return rows[0][0], rows[0][1], rows[0][2]
+
+
+	def verifyHash(self, location):
+		cur = self.dbCon.cursor()
+		currentHash = self.md5Hash(str(location))
+
+		cur.execute("SELECT DUMP_HASH FROM IMAGE WHERE DUMP_LOCATION = ?", (str(location),))
+		rows = cur.fetchall()
+		self.dbCon.commit()
+
+		return currentHash == rows[0][0]
 
 	def wasImageAnalysed(self, imageHash):
 		cur = self.dbCon.cursor()
