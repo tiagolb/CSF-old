@@ -2,6 +2,7 @@ import sys, os
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import QUrl
 import sqlite3 as lite
+import time
 
 from dbSchema import initDatabase
 from views.home import Ui_HomePage
@@ -310,7 +311,12 @@ class MainWindow(QtGui.QMainWindow):
             if(len(modulesToApply) > 0):
                 analyzer = Analyzer()
                 analyzer.setup(modulesToApply, imageLocation, fileHash, self.current_case)
+                initTime = time.time()
                 analyzer.analysisLoop()
+                endTime = time.time()
+
+                print "Elapsed time:"
+                print endTime - initTime
 
                 #Refresh analysed modules and enable result view
                 if(self.imageModel.wasImageAnalysed(fileHash)):

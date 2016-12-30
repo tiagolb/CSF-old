@@ -101,8 +101,6 @@ class Analyzer():
         tag = "RAMAS" + str(nonce)
         random_delim = tag
 
-        print random_delim
-
 
         for m, t in enumerate(message_tuples):
             for opt in delimiters[1:]:
@@ -110,9 +108,9 @@ class Analyzer():
                     message_tuples[m] = message_tuples[m].replace(opt[1], random_delim, 1)      #replace start delimiter for field
                     message_tuples[m] = self.__rreplace(message_tuples[m], opt[2], random_delim, 1) #replace end delimiter for field
 
-        print "PROVA"
-        print message_tuples[0]
-        print len(message_tuples)
+        #print "Caught full records:"
+        #print message_tuples[0]
+        #print len(message_tuples)
 
 
         fields = []
@@ -134,7 +132,7 @@ class Analyzer():
             threads = thread_regex.findall(t)
             if len(threads) > 0:
                 results.append(threads[0])
-        print results
+        #print results
         return set(results)
 
 
@@ -151,7 +149,6 @@ class Analyzer():
         #create a temporary file in /tmp for this module
         temp_tuple   = tempfile.mkstemp(suffix=".dump", prefix=prefix)
         temp_handler = open(temp_tuple[1], "w+") # open the file
-
 
         self.__process(module, temp_handler) # preprocess the file
         temp_handler.seek(0) # go back to the beginning of the file

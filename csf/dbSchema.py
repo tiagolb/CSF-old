@@ -35,12 +35,13 @@ def initDatabase(dbCon):
            DESCRIPTION  TEXT  NOT NULL,\
            PRIMARY KEY (NAME))")
 
-        cur.execute("CREATE TABLE PERSON(\
-           NAME        TEXT  NOT NULL,\
-           CASE_NAME   TEXT NOT NULL,\
-           LINK        TEXT,\
-           FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME),\
-           PRIMARY KEY (NAME))")
+
+        #cur.execute("CREATE TABLE PERSON(\
+        #   NAME        TEXT  NOT NULL,\
+        #   CASE_NAME   TEXT NOT NULL,\
+        #   LINK        TEXT,\
+        #   FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME),\
+        #   PRIMARY KEY (NAME))")
 
         #cur.execute("CREATE TABLE MESSAGE(\
         # ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\
