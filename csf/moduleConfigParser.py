@@ -7,7 +7,7 @@ def readConfig(configFile):
     Config.read(configFile)
 
     config_sections = Config.sections()
-    if(len(config_sections) == 4):
+    if(len(config_sections) == 5):
         if('StartDelimiter' in config_sections and 'EndDelimiter' in config_sections and
             'PreProcess' in config_sections and 'Info' in config_sections):
             start_options = Config.options('StartDelimiter')
@@ -30,12 +30,16 @@ def readConfig(configFile):
 
                 else:
                     print "Start and End delimiter options must match"
+                    return False
             else:
                 print "'Record' option must be defined"
+                return False
         else:
             print 'Malformed sections: Provide Start/End Delimiters and PreProcess'
+            return False
     else:
-        print 'Malformed sections: Other than four'
+        print 'Malformed sections: Other than five. Ensure you define Info, StartDelimiter, EndDelimiter, PreProcess and Mediator'
+        return False
 
 def readModuleInfo(configFile):
     Config = ConfigParser.ConfigParser()
@@ -59,3 +63,8 @@ def readPreProcessorConfig(configFile):
         preProcess_options = Config.options('PreProcess')
         if(len(preProcess_options) == 1 and 'keyword' in preProcess_options):
             return Config.get('PreProcess','keyword')
+
+def readMediatorInfo(configFile):
+    Config = ConfigParser.ConfigParser()
+    Config.read(configFile)
+    return Config.get('Mediator','date')

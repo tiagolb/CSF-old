@@ -38,11 +38,13 @@ def initDatabase(dbCon):
         cur.execute("CREATE TABLE GLOBAL_MSG(\
             ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\
             CASE_NAME         TEXT        NOT NULL,\
+            DUMP_HASH         BINARY(32)  NOT NULL,\
             AUTHOR            TEXT        NOT NULL,\
             RECIPIENT         TEXT        NOT NULL,\
             CONTENT           TEXT        NOT NULL,\
             MSG_TIMESTAMP     DATE        NOT NULL,\
-            FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME))")
+            FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME),\
+            FOREIGN KEY (DUMP_HASH) REFERENCES IMAGE(DUMP_HASH))")
 
 
         #cur.execute("CREATE TABLE MESSAGE(\

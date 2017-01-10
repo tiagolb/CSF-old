@@ -43,13 +43,17 @@ class ImageModel(QtGui.QStandardItemModel):
 
 	def deleteImage(self, row, location, case_name):
 		cur = self.dbCon.cursor()
+		imgHash = self.md5Hash(location)
+
 		cur.execute("DELETE FROM IMAGE WHERE DUMP_LOCATION=? AND CASE_NAME=?", (str(location), str(case_name)))
+
+		cur.execute("DELETE FROM GLOBAL_MSG WHERE DUMP_HASH=? AND CASE_NAME=?", (str(imgHash), str(case_name)))
 
 		#Erase messages pertaining to the image/Case
 		cur.execute("SELECT NAME FROM MODULE")
 		rows = cur.fetchall()
 
-		imgHash = self.md5Hash(location)
+
 		for r in rows:
 			query = "DELETE FROM " + str(r[0]) + "_MSG WHERE DUMP_HASH=? AND CASE_NAME=?"
 			cur.execute(query, (str(imgHash), str(case_name)))

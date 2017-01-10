@@ -38,13 +38,17 @@ import re
 import sqlite3 as lite
 import random
 
+from dateConvertor import DateConvertor
+
 from models.messageModel import MessageModel
 from subprocess import Popen, PIPE
 from moduleConfigParser import readConfig
 from moduleConfigParser import readRecordFields
 from moduleConfigParser import readPreProcessorConfig
+from moduleConfigParser import readMediatorInfo
 
 dbName = 'ramas.db'
+
 class Analyzer():
     def __rreplace(self, s, old, new, occurrence):
         li = s.rsplit(old, occurrence)
@@ -74,10 +78,46 @@ class Analyzer():
                             query += "?,?,?)"
 
         #Add current image + current case to the record fields
-        base = (str(self.fileHash),str(self.currentCase))
+        base = [str(self.fileHash),str(self.currentCase)]
         for record in records:
             values = base + record
             cur.execute(query, values)
+
+
+
+        #Build query for inserting records into the mediated schema (Global Table G)
+        authorIndex = -1
+        recipientIndex = -1
+        contentIndex = -1
+        dateIndex = -1
+
+        for n, field in enumerate(recordFields):
+            if(field == "author"):
+                authorIndex = n
+            elif(field == "recipient"):
+                recipientIndex = n
+            elif(field == "content"):
+                contentIndex = n
+            elif(field == "date"):
+                dateIndex = n
+
+
+        for record in records:
+            #match 4-tuple field with index in full record
+            if(authorIndex == -1):
+                author = "Undeclared"
+            else:
+                author = record[authorIndex]
+            if(recipientIndex == -1):
+                recipient = "Undeclared"
+            else:
+                recipient = record[recipientIndex]
+            content = record[contentIndex]
+            date = record[dateIndex]
+
+            cur.execute("INSERT INTO GLOBAL_MSG (CASE_NAME, DUMP_HASH, AUTHOR, RECIPIENT, CONTENT, MSG_TIMESTAMP) VALUES (?, ?, ?, ?, ?, ?)",\
+    			(str(self.currentCase), str(self.fileHash), str(author), str(recipient), str(content), str(date)))
+
 
         dbCon.commit()
 
@@ -88,6 +128,11 @@ class Analyzer():
         processed_input = re.sub(r'\\(.)', r'\1', strings_joined)
 
         delimiters = readConfig("platforms/" + module + ".cfg")
+        if(not delimiters):
+            print "Error in module config file for " + module
+            print "Skipping Analysis"
+            #TODO push error to interface
+            return []
 
         # Gather relevant blocks containing messages
         begin = re.escape(delimiters[0][1]) + r'(.+?)' + re.escape(delimiters[0][2])
@@ -96,6 +141,11 @@ class Analyzer():
 
         message_tuples = message_block_regex.findall(processed_input)
 
+        #Set up for dateFormat matching and timeline ordering
+        dateConvertor = DateConvertor()
+        moduleDateFormat = readMediatorInfo("platforms/" + module + ".cfg")
+
+        dateDelim = None
         #Change delimiters
         nonce = random.randint(0,100000) #generate rand delimiter
         tag = "RAMAS" + str(nonce)
@@ -103,15 +153,17 @@ class Analyzer():
 
 
         for m, t in enumerate(message_tuples):
-            for opt in delimiters[1:]:
+            for i, opt in enumerate(delimiters[1:]):
                 if(opt[0] == "content"):
                     message_tuples[m] = message_tuples[m].replace(opt[1], random_delim, 1)      #replace start delimiter for field
                     message_tuples[m] = self.__rreplace(message_tuples[m], opt[2], random_delim, 1) #replace end delimiter for field
+                if(opt[0] == "date"):
+                    dateDelim = i
 
         #print "Caught full records:"
         #print message_tuples[0]
         #print len(message_tuples)
-
+        #print dateDelim
 
         fields = []
         for opt in delimiters[1:]:
@@ -133,7 +185,22 @@ class Analyzer():
             if len(threads) > 0:
                 results.append(threads[0])
         #print results
-        return set(results)
+
+        #Order results
+        orderedResults = []
+        for result in results:
+            elements = []
+            for elem in result:
+                elements.append(elem)
+            orderedResults.append(elements)
+
+        if(dateConvertor.verifyDateFormat(moduleDateFormat)):
+            for n, result in enumerate(orderedResults):
+                orderedResults[n][dateDelim] = dateConvertor.convert(moduleDateFormat, orderedResults[n][dateDelim])
+        else:
+            print "Will not convert to common representation - unrecognized date format"
+
+        return sorted(orderedResults, key=lambda res: res[dateDelim])
 
 
     def __process(self,module, output_file):
