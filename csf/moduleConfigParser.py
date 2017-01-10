@@ -35,7 +35,7 @@ def readConfig(configFile):
         else:
             print 'Malformed sections: Provide Start/End Delimiters and PreProcess'
     else:
-        print 'Malformed sections: Other than three'
+        print 'Malformed sections: Other than four'
 
 def readModuleInfo(configFile):
     Config = ConfigParser.ConfigParser()

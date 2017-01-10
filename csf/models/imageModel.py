@@ -1,6 +1,7 @@
 from PyQt4 import QtGui
 import hashlib
 import shutil
+import os
 
 class ImageModel(QtGui.QStandardItemModel):
 
@@ -57,7 +58,8 @@ class ImageModel(QtGui.QStandardItemModel):
 		cur.execute("SELECT DUMP_HASH FROM IMAGE WHERE DUMP_LOCATION=?", (str(location),))
 		rows = cur.fetchall()
 		if(len(rows) == 0):
-			shutil.rmtree('./audit_result/'+ imgHash)
+			if(os.path.exists('./audit_result/'+ imgHash)):
+				shutil.rmtree('./audit_result/'+ imgHash)
 
 		self.dbCon.commit()
 		self.takeRow(row)

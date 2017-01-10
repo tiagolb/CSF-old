@@ -9,7 +9,7 @@ def initDatabase(dbCon):
     rows_image = cur.fetchall()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='MODULE'")
     rows_module = cur.fetchall()
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='PERSON'")
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='GLOBAL_MSG'")
     rows_person = cur.fetchall()
 
     if(len(rows_fcase) == 0 and len(rows_image) == 0 and len(rows_module) == 0 and
@@ -31,17 +31,19 @@ def initDatabase(dbCon):
            PRIMARY KEY (DUMP_LOCATION, CASE_NAME))")
 
         cur.execute("CREATE TABLE MODULE(\
-           NAME  TEXT  NOT NULL,\
-           DESCRIPTION  TEXT  NOT NULL,\
-           PRIMARY KEY (NAME))")
+            NAME  TEXT  NOT NULL,\
+            DESCRIPTION  TEXT  NOT NULL,\
+            PRIMARY KEY (NAME))")
 
+        cur.execute("CREATE TABLE GLOBAL_MSG(\
+            ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\
+            CASE_NAME         TEXT        NOT NULL,\
+            AUTHOR            TEXT        NOT NULL,\
+            RECIPIENT         TEXT        NOT NULL,\
+            CONTENT           TEXT        NOT NULL,\
+            MSG_TIMESTAMP     DATE        NOT NULL,\
+            FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME))")
 
-        #cur.execute("CREATE TABLE PERSON(\
-        #   NAME        TEXT  NOT NULL,\
-        #   CASE_NAME   TEXT NOT NULL,\
-        #   LINK        TEXT,\
-        #   FOREIGN KEY (CASE_NAME) REFERENCES FCASE(NAME),\
-        #   PRIMARY KEY (NAME))")
 
         #cur.execute("CREATE TABLE MESSAGE(\
         # ID                INTEGER     PRIMARY KEY AUTOINCREMENT NOT NULL,\

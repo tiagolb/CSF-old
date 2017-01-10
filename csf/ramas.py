@@ -23,6 +23,7 @@ from moduleConfigParser import readModuleInfo
 from moduleConfigParser import readRecordFields
 
 dbName = 'ramas.db'
+showAnalysisTime = False
 
 class MainWindow(QtGui.QMainWindow):
     ######################################
@@ -311,12 +312,15 @@ class MainWindow(QtGui.QMainWindow):
             if(len(modulesToApply) > 0):
                 analyzer = Analyzer()
                 analyzer.setup(modulesToApply, imageLocation, fileHash, self.current_case)
-                initTime = time.time()
-                analyzer.analysisLoop()
-                endTime = time.time()
+                if(showAnalysisTime):
+                    initTime = time.time()
 
-                print "Elapsed time:"
-                print endTime - initTime
+                analyzer.analysisLoop()
+
+                if(showAnalysisTime):
+                    endTime = time.time()
+                    print "Elapsed time:"
+                    print endTime - initTime
 
                 #Refresh analysed modules and enable result view
                 if(self.imageModel.wasImageAnalysed(fileHash)):
