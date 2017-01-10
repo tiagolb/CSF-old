@@ -1,19 +1,20 @@
 RAMAS
 =====
 
-RAM Analysis System is an extensible memory forensics analysis tool for linux which is able to capture useful data from instant-messaging and email client applications through the matching of regular expressions. Although we employ a general memory data carving approach, we argue that our tool is a valuable asset in a digital forensic investigator's kit, so as to ease the automatic extraction of relevant communication data. To the best of our knowledge, this is the only available tool aimed at extracting and building a timeline of the communications taken forth by a given suspect.
+ RAM Analysis System, or simply RAMAS, is an extensible carving utility which aims to ease and automate the process of analysing communication records left behind in physical memory by instant-messaging and email web clients. We have developed a forensic framework where the responsibility of creating and updating carving modules for different applications is distributed amongst practitioners. RAMAS also provides a way to inspect results, either by the inspection of forensic timelines or by making available a database which can be queried to unveil sophisticated correlations among the recovered evidence.
+
 
 
 Supported Applications
 ----------------------
 
-As of this moment the supported (of the shelf) applications are the following:
+RAMAS is able to extract communication records from several web-applications, such as:
 
-* Facebook Chat Messages (and Messenger)
+* Facebook (and Messenger.com) Chat
 * Twitter Direct Messages
-* Skype Web Client
+* Skype Web Clients
 * Roundcube Email Client
-* Pidgin Desktop Client
+* Outlook Email Client
 
 Usage
 -----
@@ -23,109 +24,25 @@ First off, to setup RAMAS you need to clone the repository and, at the root of t
 ```
 $ pip install -r requirements.txt
 ```
-This installs all the dependencies of RAMAS automatically. This may require root access, in this case perfrom the same command with the sudo prefix:
+This installs all the dependencies of RAMAS automatically. This may require root access, in this case perform the same command with the sudo prefix:
 
 ```
 $ sudo pip install -r requirements.txt
 ```
 
-To extract data using RAMAS, change directory to `csf/` and check the following command for help:
+To extract data using RAMAS, change directory to `csf/` and execute the tool:
 
 ```
-$ python ramas.py extract --help
+$ python ramas.py
 ```
 
-To extract the memory dump we suggest the use of DumpIt, a tool for Windows which was used for the development of this system.
+RAMAS takes as input strings files, obtained from the processing of raw memory images. Strings files can be obtained by running the `strings` utility over raw dumps.
 
-Note: if you want to test RAMAS without extracting a dump from memory you may refer to the next section - Testing
-
-DumpIt generates a RAW dump file which can then be given as input to strings (linux CLI program) so it can extract the strings to another file which can then be given as input RAMAS.
-
-A simple example to extract chat messages from Facebook and present the results with HTML:
+A simple example is depicted below.
 
 ```
 $ strings RAW_DUMP_FILE > STRINGS_DUMP_FILE
 ```
-
-```
-$ python ramas.py extract -f STRINGS_DUMP_FILE -t facebook --html --threads
-```
-
-After this command is executed, a folder called `audit_result/` is created and in it are the results of this audit. If the HTML flag is used, then a file called audit.html is generated as an entry point for the results.
-
-
-Testing
--------
-
-If you want to test RAMAS we suggest you use the following file:
-[Dump in DropBox](https://www.dropbox.com/s/6s90z940wxozm8z/ultimateDump?dl=0)
-This file was used during testing and represents a fairly large dump from a 4GB machine preprocessed to a smaller size using the strings program. It can be directly used in RAMAS.
-
-Note that the result of analysing this memory dump does not show results for skype, as there is no information regarding this application in the dump.
-
-
-Extension Development
----------------------
-
-To develop new modules for RAMAS, the following command is available:
-
-```
-$ python ramas.py create
-```
-
-This command creates a directory called external/ which contains two files:
-
-- project
-    * `ramas.py`
-    * (...)
-    * external/
-        * `__init__.py`  
-        * `newModule.py`
-
-Both of these files need to be edited so the new module can be installed. Rename `newModule.py` file to whatever name you desire and modify the three classes which compose RAMAS' API:
-
-```python
-import outputs
-
-class NewModulePreProcessor:
-    def process(self, input_filename, output_file):
-        # to be implemented
-
-class NewModuleParser:
-    def get_timeline(self, input_file):
-        # to be implemented
-
-class NewModuleOutput(outputs.OutputFactory):
-    def text_code(self, input_list):
-        # to be implemented
-
-    def html_code(self, input_list):
-        # to be implemented
-```
-
-You can edit the name of these classes but not the name of these functions!
-
-Next you'll need to edit the `__init__.py` file with the following:
-
-```python
-import newModule
-MODULES = {
-  'newModule' : [
-    newModule.NewModuleParser(),
-    newModule.NewModuleOutput(),
-    newModule.NewModulePreProcessor()
-  ]
-}
-```
-
-Where you replace newModule with the name you have given to the module file. After this you can execute the following command:
-
-```
-$ python ramas.py extract --help
-```
-
-to check if the new module is installed.
-
 
 Documentation
 -------------
@@ -147,10 +64,10 @@ Authors
 Notes
 -----
 
-This tool was developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt) and is licensed under the open-source MIT License (https://opensource.org/licenses/MIT).
+This tool was initially developed for Forensic Cyber Security course at IST (https://tecnico.ulisboa.pt) under the open-source MIT License (https://opensource.org/licenses/MIT).
+Likewise, the improved RAMAS v2.0 was developed in the scope of the Research Topics course at IST.
 
-This tool was tested for dumps from the Chrome Web Browser running on a Windows 7 machine.
-This tool was tested in a 64-bit Ubuntu 14.04 LTS with python 2.7.6.
+This tool was tested in a 64-bit Ubuntu 16.04 LTS with python 2.7.12.
 
 This tool uses the `HTML.py` module for html generation (http://www.decalage.info/python/html)
 

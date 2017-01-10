@@ -2,21 +2,18 @@
 Changelog
 =========
 
-Version 0.1
+Version 1.0
 ===========
 
-- Support for Twitter, Facebook, FacebookThreads
-- Support for external modules
+- Support for the development of external modules - require Python programming skills, REgex know-how (RAMAS API)
 - Html and Text output
-- Support for receiving raw dumps as input rather then pre-processed dumps
+- PreProcessing capability
+- Threaded Execution
 
-Version 0.2
+Version 2.0
 ===========
 
-- Support for Facebook Chat Messages (and Messenger), Twitter Direct Messages, Skype Web Client, Roundcube Email Client, Pidgin Desktop Client
-- Support for external modules
-- Developer friendly support for the developement of external modules with RAMAS' API
-- Html and Text output
-- Support for receiving raw dumps as input rather then pre-processed dumps
-- In program preprocessing
-- Threaded execution
+- Support for the development of external modules - no programming skills required, no REgex know-how (Modules built through config files)
+- Dropped text output. Output is shown as forensic timelines. Obtained records can be queried in a database, enabling evidence correlation between different memory images
+- Added GUI for managing images, cases and evidence
+- Dropped console-based utility
